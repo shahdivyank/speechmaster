@@ -28,8 +28,8 @@ export async function POST(req) {
       categories: categories.join(","),
     },
   });
-  if (snapshot) res.json(snapshot);
-  else res.json(500);
+  console.log(snapshot);
+  return res.json(snapshot);
 }
 
 export async function GET() {

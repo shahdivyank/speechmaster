@@ -5,13 +5,15 @@ import { useRef, useState, useCallback } from "react";
 import axios from "axios";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
+import toast from "react-hot-toast";
 
 const live = () => {
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [recordedVideo, setRecordedVideo] = useState([]);
-
+  const [title, setTitle] = useState("");
+  // const [loading, setLoading] = useState(false);
   const handleStartRecording = useCallback(() => {
     setRecording(true);
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
@@ -49,14 +51,19 @@ const live = () => {
         const base64data = reader.result;
         console.log(base64data);
         axios
-          .post(`api/vedio`, {
+          .post(`api/video`, {
             file: base64data,
+            title: title,
+            // TODO: add actrual categories
+            categories: ["test", "menthy"],
           })
           .then((res) => {
             console.log(res);
+            toast("✅ Video Uploaded Successfully");
           })
           .catch((err) => {
             console.log(err);
+            toast("❌ Internal Server Error");
           });
       };
 
@@ -166,19 +173,23 @@ const live = () => {
     }
   };
   return (
-    <div className="w-full h-full flex justify-center">
+    <div className="w-full h-[90vh] flex justify-center">
       <div className="w-8/12 flex flex-col h-full justify-between items-center">
         <div className="h-6 w-full flex my-3">
           <textarea
             className="px-2 resize-none rounded w-full"
             placeholder="title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
           />
           <div className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs">
             save
           </div>
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
-        <div className="flex">
+        <div className="flex gap-3 items-center">
           {recording ? (
             <BsStopCircle
               className="text-sm-red text-5xl cursor-pointer"
@@ -197,7 +208,10 @@ const live = () => {
             />
           )}
           {recordedVideo.length > 0 && (
-            <div className="" onClick={handleUpload}>
+            <div
+              className="bg-sm-red text-lg font-semibold text-white px-3 py-2 rounded-sm hover:cursor-pointer"
+              onClick={handleUpload}
+            >
               Upload
             </div>
           )}

@@ -48,8 +48,11 @@ const VideoRecording = () => {
         const base64data = reader.result;
         console.log(base64data);
         axios
-          .post(`api/vedio`, {
+          .post(`api/video`, {
             file: base64data,
+            title: title,
+            // TODO: add actrual categories
+            categories: ["test", "menthy"],
           })
           .then((res) => {
             console.log(res);
