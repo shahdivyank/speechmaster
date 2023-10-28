@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 const NavBar = ({ categories, recordings, setRecordings }) => {
   const { data: session } = useSession();
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -24,6 +25,7 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
   };
 
   const handleFilter = (category) => {
+    setFilter(category);
     setRecordings(
       recordings.map((recording) => {
         if (recording.categories.includes(category)) {
@@ -37,6 +39,7 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
   };
 
   const handleReset = () => {
+    setFilter("all");
     setRecordings(
       recordings.map((recording) => {
         recording.hidden = false;
@@ -73,9 +76,11 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
         </form>
 
         <div className="my-3 flex items-center">
-          <div className="w-1.5 rounded-full bg-sm-orange h-8" />
+          {filter === "all" && (
+            <div className="w-1.5 rounded-full bg-sm-orange h-8" />
+          )}
           <div
-            className=" cursor-pointer font-bold flex items-center bg-gray-100 w-full ml-2 py-1 rounded"
+            className=" cursor-pointer font-bold flex items-center w-full px-3 py-1 hover:bg-gray-100 "
             onClick={handleReset}
           >
             <BsFileText className="text-xl mr-2" />
@@ -84,21 +89,28 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
         </div>
 
         {categories.map((category, index) => (
-          <div
-            key={index}
-            onClick={() => handleFilter(category)}
-            className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-3 py-1 cursor-pointer"
-          >
+          <div className="flex" key={index}>
+            {filter === category ? (
+              <div className="w-1.5 rounded-full bg-sm-orange h-8" />
+            ) : (
+              <div className="w-1.5 bg-transparent" />
+            )}
             <div
-              className={`mx-2 rounded-full w-2.5 h-2.5 ${
-                index % 3 === 0
-                  ? "bg-sm-blue"
-                  : index % 2 === 0
-                  ? "bg-sm-orange"
-                  : "bg-sm-red"
-              }`}
-            />
-            {category}
+              key={index}
+              onClick={() => handleFilter(category)}
+              className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-3 py-1 cursor-pointer w-full"
+            >
+              <div
+                className={`mx-2 rounded-full w-2.5 h-2.5 ${
+                  index % 3 === 0
+                    ? "bg-sm-blue"
+                    : index % 2 === 0
+                    ? "bg-sm-orange"
+                    : "bg-sm-red"
+                }`}
+              />
+              {category}
+            </div>
           </div>
         ))}
       </div>
