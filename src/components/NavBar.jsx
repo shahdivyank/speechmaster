@@ -82,7 +82,7 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
             <div className="w-1.5 bg-transparent" />
           )}
           <div
-            className=" cursor-pointer font-bold flex items-center w-full px-3 py-1 hover:bg-gray-100 "
+            className=" cursor-pointer font-bold flex items-center w-full px-2 py-1 hover:bg-gray-100 "
             onClick={handleReset}
           >
             <BsFileText className="text-xl mr-2" />
@@ -100,7 +100,7 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
             <div
               key={index}
               onClick={() => handleFilter(category)}
-              className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-3 py-1 cursor-pointer w-full"
+              className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-1 py-1 cursor-pointer w-full"
             >
               <div
                 className={`mx-2 rounded-full w-2.5 h-2.5 ${

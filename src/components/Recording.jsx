@@ -47,9 +47,8 @@ const Recording = ({
                 <p className="m-0 pr-2 text-sm-grey">audience</p>
                 {share.map((img, index) => (
                   <Image
-                    height="20"
-                    width="20"
-                    className="rounded-full"
+                    width="25"
+                    className="rounded-full aspect-square mx-0.5"
                     src={img}
                     key={index}
                   />
