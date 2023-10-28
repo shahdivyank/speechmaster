@@ -3,23 +3,27 @@ import React from "react";
 import Image from "next/image";
 import logo from "../../public/logo.svg";
 import { BsFileText } from "react-icons/bs";
+import { useSession } from "next-auth/react";
 
-const NavBar = ({ name, email, categories, image }) => {
+const NavBar = ({ categories }) => {
+  const { data: session } = useSession();
+
   return (
     <div className="w-1/4 bg-sm-white flex flex-col justify-between p-4 font-poppins">
       <div>
         <div className="flex items-center mb-4">
           <div>
             <Image
+              height="40"
               width="40"
               className=" aspect-square rounded-full mr-2"
-              src={image}
+              src={session.user.image}
               alt="profile photo"
             />
           </div>
           <div>
-            <p className="m-0 text-lg font-extrabold">{name}</p>
-            <p className="-mt-1 mb-0">{email}</p>
+            <p className="m-0 text-lg font-extrabold">{session.user.name}</p>
+            <p className="-mt-1 mb-0">{session.user.email}</p>
           </div>
         </div>
         <textarea

@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Poppins } from "next/font/google";
+import ProtectedPage from "@/components/ProtectedPage";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,8 +23,10 @@ export default function RootLayout({ children, session }) {
         className="h-full"
       >
         <body className="bg-sm-beige min-h-screen">
-          <TitleBar />
-          {children}
+          <ProtectedPage>
+            <TitleBar />
+            {children}
+          </ProtectedPage>
         </body>
       </SessionProvider>
     </html>

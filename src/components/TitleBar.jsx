@@ -2,9 +2,11 @@
 import React from "react";
 import Image from "next/image";
 import logo from "../../public/logo.svg";
-import { user } from "@/data/User";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+
 const NavBar = () => {
+  const { data: session } = useSession();
   return (
     <div className="bg-sm-white justify-between flex px-3 py-2">
       <Link
@@ -16,16 +18,17 @@ const NavBar = () => {
       <div className="flex items-center">
         <div>
           <Image
+            height="40"
             width="40"
             className=" aspect-square rounded-full mr-2"
-            src={user.image}
+            src={session.user.image}
             alt="profile photo"
           />
         </div>
 
         <div>
-          <p className="m-0 text-lg font-extrabold">{user.name}</p>
-          <p className="-mt-1 mb-0">{user.email}</p>
+          <p className="m-0 text-lg font-extrabold">{session.user.name}</p>
+          <p className="-mt-1 mb-0">{session.user.email}</p>
         </div>
       </div>
     </div>
