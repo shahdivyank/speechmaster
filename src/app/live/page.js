@@ -32,7 +32,9 @@ const live = () => {
         </div>{" "}
       </div>
 
-      <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl"></div>
+      <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
+        <p className="font-bold text-xl p-0">note</p>
+      </div>
     </div>
   );
 };
