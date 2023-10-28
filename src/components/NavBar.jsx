@@ -76,8 +76,10 @@ const NavBar = ({ categories, recordings, setRecordings }) => {
         </form>
 
         <div className="my-3 flex items-center">
-          {filter === "all" && (
+          {filter === "all" ? (
             <div className="w-1.5 rounded-full bg-sm-orange h-8" />
+          ) : (
+            <div className="w-1.5 bg-transparent" />
           )}
           <div
             className=" cursor-pointer font-bold flex items-center w-full px-3 py-1 hover:bg-gray-100 "
