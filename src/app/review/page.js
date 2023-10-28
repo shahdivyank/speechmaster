@@ -1,5 +1,10 @@
+"use client";
+import { BsPlayCircle, BsStopCircle } from "react-icons/bs";
+import { useState } from "react";
 import { breakdown } from "@/data/Breakdown";
+
 const review = () => {
+  const [toggle, setToggle] = useState(false);
   return (
     <div className="w-full flex justify-center">
       <div className="w-8/12 flex flex-col min-h-screen">
@@ -12,7 +17,19 @@ const review = () => {
             save
           </div>
         </div>
-        <div className="w-full h-96 rounded-lg bg-sm-grey" />
+        <div className="w-full h-96 rounded-lg bg-sm-grey flex items-end justify-center p-3">
+          {toggle ? (
+            <BsStopCircle
+              className="text-sm-red text-5xl cursor-pointer"
+              onClick={() => setToggle(false)}
+            />
+          ) : (
+            <BsPlayCircle
+              className="cursor-pointer text-5xl"
+              onClick={() => setToggle(true)}
+            />
+          )}
+        </div>
         <div className=" h-4 rounded-full my-4 bg-gradient-to-r from-sm-orange via-sm-red to-sm-blue" />
       </div>
 
