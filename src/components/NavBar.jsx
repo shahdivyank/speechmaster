@@ -1,15 +1,52 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import logo from "../../public/logo.svg";
 import { BsFileText } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 
-const NavBar = ({ categories }) => {
+const NavBar = ({ categories, recordings, setRecordings }) => {
   const { data: session } = useSession();
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setRecordings(
+      recordings.map((recording) => {
+        if (recording.title.toLowerCase().match(search.toLowerCase())) {
+          recording.hidden = false;
+        } else {
+          recording.hidden = true;
+        }
+        return recording;
+      }),
+    );
+  };
+
+  const handleFilter = (category) => {
+    setRecordings(
+      recordings.map((recording) => {
+        if (recording.categories.includes(category)) {
+          recording.hidden = false;
+        } else {
+          recording.hidden = true;
+        }
+        return recording;
+      }),
+    );
+  };
+
+  const handleReset = () => {
+    setRecordings(
+      recordings.map((recording) => {
+        recording.hidden = false;
+        return recording;
+      }),
+    );
+  };
 
   return (
-    <div className="w-1/4 bg-sm-white flex flex-col justify-between p-4 font-poppins">
+    <div className="w-1/5 bg-sm-white flex flex-col justify-between p-4 font-poppins">
       <div>
         <div className="flex items-center mb-4">
           <div>
@@ -26,13 +63,21 @@ const NavBar = ({ categories }) => {
             <p className="-mt-1 mb-0">{session.user.email}</p>
           </div>
         </div>
-        <textarea
-          className=" resize-none px-3 pt-1 h-7 w-full bg-sm-lightgrey text-sm-grey rounded text-xs"
-          placeholder="search"
-        />
+        <form onSubmit={handleSearch}>
+          <input
+            className="resize-none px-3 py-1 h-7 w-full bg-sm-lightgrey text-sm-grey rounded text-xs outline-none"
+            placeholder="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </form>
+
         <div className="my-3 flex items-center">
           <div className="w-1.5 rounded-full bg-sm-orange h-8" />
-          <div className=" cursor-pointer font-bold flex items-center bg-gray-100 w-full ml-2 py-1 rounded">
+          <div
+            className=" cursor-pointer font-bold flex items-center bg-gray-100 w-full ml-2 py-1 rounded"
+            onClick={handleReset}
+          >
             <BsFileText className="text-xl mr-2" />
             All Speeches
           </div>
@@ -41,6 +86,7 @@ const NavBar = ({ categories }) => {
         {categories.map((category, index) => (
           <div
             key={index}
+            onClick={() => handleFilter(category)}
             className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-3 py-1 cursor-pointer"
           >
             <div

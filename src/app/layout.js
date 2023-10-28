@@ -6,6 +6,8 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Poppins } from "next/font/google";
 import ProtectedPage from "@/components/ProtectedPage";
+import { Toaster } from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -15,6 +17,7 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({ children, session }) {
+  const pathname = usePathname();
   return (
     <html lang="en" className={`${poppins.variable}`}>
       <SessionProvider
@@ -24,7 +27,9 @@ export default function RootLayout({ children, session }) {
       >
         <body className="bg-sm-beige min-h-screen">
           <ProtectedPage>
-            <TitleBar />
+            <Toaster />
+            {pathname !== "/" && <TitleBar />}
+
             {children}
           </ProtectedPage>
         </body>
