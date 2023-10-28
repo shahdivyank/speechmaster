@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { blobToBase64 } from "./BlobToBase64";
 
-const AudioAnalysis = () => {
+const AudioAnalysis = ({ audioBlob }) => {
   const apiKey = process.env.NEXT_PUBLIC_HUME_AI_KEY;
   const socketRef = useRef(WebSocket);
   const serverReadyRef = useRef(true);
@@ -36,14 +37,16 @@ const AudioAnalysis = () => {
       console.log("No socket on state");
       return;
     }
+    console.log("hello" + audioBlob);
+    const audioFile = await blobToBase64(audioBlob);
+    console.log("goodbye" + audioFile);
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
           models: {
-            language: {},
+            prosody: {},
           },
-          raw_text: true,
-          data: "Mary had a little lamb",
+          data: audioFile,
         }),
       );
     }

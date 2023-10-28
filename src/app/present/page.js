@@ -1,11 +1,14 @@
 "use client";
+import AudioAnalysis from "@/components/AudioAnalysis";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
-import { createRef } from "react";
+import { createRef, useState } from "react";
 import Webcam from "react-webcam";
 
 const Page = () => {
   const ref = createRef(null);
+  const [audioTracks, setAudioTracks] = useState();
+  const [base64Audio, setBase64Audio] = useState();
 
   const load = async () => {
     const detector = await poseDetection.createDetector(
@@ -21,6 +24,17 @@ const Page = () => {
   const detect = async (detector) => {
     if (detector && ref) {
       if (ref.current) {
+        if (ref.current.stream) {
+          setAudioTracks(ref.current.stream.getAudioTracks());
+          const blob = new Blob(audioTracks);
+          const reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            const base64data = reader.result;
+            console.log(base64data);
+            setBase64Audio(base64data);
+          };
+        }
         const poses = await detector.estimatePoses(ref.current.video);
         checkHeadTilt(poses[0].keypoints);
         checkShoulderTilt(poses[0].keypoints);
@@ -40,7 +54,6 @@ const Page = () => {
     const rightEar = poses[4];
 
     if (leftEar.y < leftEye.y || rightEar.y < rightEye.y) {
-      console.log("LOOKING DOWN");
     }
   };
 
@@ -56,7 +69,6 @@ const Page = () => {
       rightShoulder.y + margin < leftShoulder.y ||
       rightShoulder.y - margin > leftShoulder.y
     ) {
-      console.log("shoulders misaligned");
     }
   };
 
@@ -72,7 +84,6 @@ const Page = () => {
       rightHip.y + margin < leftHip.y ||
       rightHip.y - margin > leftHip.y
     ) {
-      console.log("shoulders misaligned");
     }
   };
 
@@ -96,7 +107,6 @@ const Page = () => {
       leftHip.x + margin < leftAnkle.x ||
       leftHip.x - margin > leftAnkle.x
     ) {
-      console.log("LEFT LEG IN CHECK");
     }
 
     if (
@@ -105,13 +115,13 @@ const Page = () => {
       rightHip.x + margin < rightAnkle.x ||
       rightHip.x - margin > rightAnkle.x
     ) {
-      console.log("RIGHT LEG IN CHECK");
     }
   };
 
   return (
     <div>
-      <Webcam ref={ref} mirrored={true} audio={false} />
+      <Webcam ref={ref} mirrored={true} audio={true} />
+      {base64Audio && <AudioAnalysis audioTracks={base64Audio} />}
     </div>
   );
 };
