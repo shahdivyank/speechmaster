@@ -2,33 +2,49 @@ import Cat from "../../public/cat.png";
 import Menthy from "../../public/cat.png";
 import Shing from "../../public/cat.png";
 
-export const recordings = [
+export const data = [
   {
-    title: "My Presentation",
+    id: 1,
+    title: "ABRA",
     share: [Shing, Menthy, Shing],
     image: Cat,
     modified: "Oct 25 2023",
     created: "Oct 25 2023",
+    hidden: false,
+    selected: false,
+    categories: ["Workshops", "Class Presentations", "Other"],
   },
   {
-    title: "My Presentation",
+    id: 2,
+    title: "BOOLEAN",
     share: [Shing, Menthy],
     image: Cat,
     modified: "Oct 25 2023",
     created: "Oct 25 2023",
+    hidden: false,
+    selected: false,
+    categories: ["Workshops", "Class Presentations"],
   },
   {
-    title: "My Presentation",
+    id: 3,
+    title: "CIVILIAN",
     share: [Shing, Menthy],
     image: Cat,
     modified: "Oct 25 2023",
     created: "Oct 25 2023",
+    hidden: false,
+    selected: false,
+    categories: ["Class Presentations", "Other"],
   },
   {
-    title: "My Presentation",
+    id: 4,
+    title: "DENTIST",
     share: [Shing, Menthy],
     image: Cat,
     modified: "Oct 25 2023",
     created: "Oct 25 2023",
+    hidden: false,
+    selected: false,
+    categories: ["Workshops", "Other"],
   },
 ];

@@ -4,5 +4,5 @@ export const user = {
   image: cat,
   name: "Evan Littlecat",
   email: "evanmeow@email.com",
-  categories: ["Workshop", "Class Presentation", "Others"],
+  categories: ["Workshop", "Class Presentation", "Other"],
 };
