@@ -6,15 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "eslint": "npx eslint .",
+    "check": "npx prettier --check .",
+    "format": "npx prettier --write .",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "next": "14.0.0",
     "react": "^18",
+    "react-bootstrap": "^2.9.1",
     "react-dom": "^18",
-    "next": "14.0.0"
+    "react-icons": "^4.11.0"
   },
   "devDependencies": {
     "autoprefixer": "^10",
+    "eslint": "^8.52.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "husky": "^8.0.0",
     "postcss": "^8",
     "tailwindcss": "^3"
   }
