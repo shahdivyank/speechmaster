@@ -1,4 +1,7 @@
 /* eslint-disable new-cap */
+"use client";
+import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Poppins } from "next/font/google";
@@ -15,12 +18,16 @@ export const metadata = {
   description: "Presentation Practice",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, session }) {
   return (
-    <html lang="en" className={`${poppins.variable}`}>
-      <body className={`bg-sm-beige`}>
-        <div className=" min-h-screen font-poppins">{children}</div>
-      </body>
+    <html lang="en">
+      <SessionProvider
+        session={session}
+        refetchInterval={5 * 60}
+        className="h-full"
+      >
+        <body className={inter.className}>{children}</body>
+      </SessionProvider>
     </html>
   );
 }
