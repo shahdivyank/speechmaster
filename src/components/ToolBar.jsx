@@ -2,20 +2,29 @@ import React from "react";
 import Link from "next/link";
 import { BsTrash3 } from "react-icons/bs";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const format = "mx-1 active:opacity-70 hover:text-sm-orange cursor-pointer";
 
 const ToolBar = ({ recordings, setRecordings }) => {
   const handleDelete = () => {
     const keep = recordings.filter((recording) => !recording.selected);
-    const remove = recordings.filter((recording) => recording.selected);
+    const remove = [];
+    recordings.forEach((recording) => {
+      if (recording.selected) remove.push(recording.identifier);
+    });
 
     if (remove.length === 0) {
       toast("❌ Select at least 1 recording");
       return;
     }
 
-    console.log("API CALL HERE TO REMOVE", remove);
+    axios
+      .put("/api/video", { title: "", videoId: remove, action: "delete" })
+      .then(() => {
+        toast("✅ Sucessfully deleted");
+      })
+      .catch((err) => toast("❌ Internal Server Error"));
 
     setRecordings(keep);
   };

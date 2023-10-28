@@ -10,7 +10,6 @@ const VideoRecording = () => {
   const mediaRecorderRef = useRef(null);
   const [recording, setRecording] = useState(false);
   const [recordedVideo, setRecordedVideo] = useState([]);
-  const [title, setTitle] = useState("");
 
   const handleStartRecording = useCallback(() => {
     setRecording(true);
@@ -49,11 +48,8 @@ const VideoRecording = () => {
         const base64data = reader.result;
         console.log(base64data);
         axios
-          .post(`api/video`, {
+          .post(`api/vedio`, {
             file: base64data,
-            title: title,
-            // TODO: add actrual categories
-            categories: ["test", "menthy"],
           })
           .then((res) => {
             console.log(res);
@@ -77,7 +73,6 @@ const VideoRecording = () => {
 
   return (
     <>
-      <input value={title} onChange={(e) => setTitle(e.target.value)} />
       <Webcam mirrored={true} audio={true} ref={webcamRef} />
       {recording ? (
         <button onClick={handleStopRecording}>Stop Capture</button>

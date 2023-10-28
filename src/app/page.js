@@ -12,7 +12,13 @@ const home = () => {
     axios
       .get("/api/video")
       .then((response) => {
-        setRecordings(response.data);
+        setRecordings(
+          response.data.map((r) => ({
+            ...r,
+            categories: r.categories.split(","),
+            selected: false,
+          })),
+        );
       })
       .catch((error) => {
         console.log(error);
@@ -32,8 +38,7 @@ const home = () => {
           .map((recording, index) => (
             <Recording
               key={index}
-              id={recording.id}
-              videoId={recording.identifier}
+              id={recording.identifier}
               recordings={recordings}
               setRecordings={setRecordings}
               image={recording.image}

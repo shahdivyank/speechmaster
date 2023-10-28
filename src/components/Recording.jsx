@@ -18,24 +18,23 @@ const Recording = ({
   format,
   selected,
   categories,
-  videoId,
 }) => {
   const onClick = () => {
     setRecordings(
       recordings.map((recording) => {
-        if (recording.id === id) {
+        if (recording.identifier === id) {
           recording.selected = !recording.selected;
         }
         return recording;
       }),
     );
   };
-
   return (
-    <div className={`w-full flex font-poppins p-3 ${format}`}>
+    <div className={`w-full flex font-poppins items-center p-3 ${format}`}>
       <Checkbox state={selected} onClick={onClick} />
-      <VideoPlayer videoId={videoId} className=" aspect-square" width="70" />
-
+      <div className="w-[150px] ">
+        <VideoPlayer videoId={id} />
+      </div>
       <div className="w-full">
         <div className="flex justify-between w-full">
           <div className="ml-2">

@@ -9,7 +9,11 @@ const ProtectedPage = ({ children }) => {
     if (status === "unauthenticated") void signIn("google");
   }, [status]);
 
-  return <div>{status === "authenticated" && children}</div>;
+  return (
+    <div className="h-full w-full">
+      {status === "authenticated" && children}
+    </div>
+  );
 };
 
 export default ProtectedPage;

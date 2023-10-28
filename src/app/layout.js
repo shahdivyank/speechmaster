@@ -25,7 +25,7 @@ export default function RootLayout({ children, session }) {
         refetchInterval={5 * 60}
         className="h-full"
       >
-        <body className="bg-sm-beige min-h-screen">
+        <body className="bg-sm-beige h-screen">
           <ProtectedPage>
             <Toaster />
             {pathname !== "/" && <TitleBar />}
