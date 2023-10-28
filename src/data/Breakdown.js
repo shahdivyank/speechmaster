@@ -5,7 +5,7 @@ export const breakdown = [
     count: "5",
   },
   {
-    behavior: "nontuone",
+    behavior: "nontune",
     count: "5",
   },
   {
