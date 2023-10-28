@@ -18,7 +18,6 @@ export async function POST(req) {
   const video = await cloudinary.v2.uploader.upload(file, {
     resource_type: "video",
   });
-  console.log(title);
   const snapshot = await prisma.videos.create({
     data: {
       identifier: video.public_id,
@@ -49,4 +48,32 @@ export async function GET() {
   });
   if (response) return res.json(response);
   else return res.json(500);
+}
+
+export async function PUT(req) {
+  const res = NextResponse;
+  const { title, videoId, action } = await req.json();
+  const prisma = new PrismaClient();
+  if (action === "delete") {
+    const snapShot = await prisma.user.deleteMany({
+      where: {
+        videoId: {
+          in: videoId,
+        },
+      },
+    });
+    if (snapShot) return res.json(snapShot);
+    else return res.json(500);
+  } else {
+    const snapShot = await prisma.videos.update({
+      where: {
+        videoId: videoId,
+      },
+      data: {
+        title: title,
+      },
+    });
+    if (snapShot) return res.json(snapShot);
+    else return res.json(500);
+  }
 }
