@@ -1,5 +1,11 @@
-import Signin from "@/components/Signin";
+import TitleBar from "@/components/TitleBar";
 
-export default function Home() {
-  return <Signin />;
-}
+const home = () => {
+  return (
+    <div>
+      <TitleBar />
+    </div>
+  );
+};
+
+export default home;
