@@ -28,7 +28,7 @@ export default function RootLayout({ children, session }) {
         <body className="bg-sm-beige h-screen">
           <ProtectedPage>
             <Toaster />
-            {pathname !== "/" && <TitleBar />}
+            {pathname !== "/" && pathname !== "/login" && <TitleBar />}
 
             {children}
           </ProtectedPage>
