@@ -4,6 +4,7 @@ import Image from "next/image";
 import { BsArrowRightShort } from "react-icons/bs";
 import Checkbox from "./Checkbox";
 import Category from "./Category";
+import VideoPlayer from "./VideoPlayer";
 
 const Recording = ({
   id,
@@ -17,6 +18,7 @@ const Recording = ({
   format,
   selected,
   categories,
+  videoId,
 }) => {
   const onClick = () => {
     setRecordings(
@@ -32,12 +34,8 @@ const Recording = ({
   return (
     <div className={`w-full flex font-poppins p-3 ${format}`}>
       <Checkbox state={selected} onClick={onClick} />
-      <Image
-        src={image}
-        alt="profile photo"
-        className=" aspect-square"
-        width="70"
-      />
+      <VideoPlayer videoId={videoId} className=" aspect-square" width="70" />
+
       <div className="w-full">
         <div className="flex justify-between w-full">
           <div className="ml-2">

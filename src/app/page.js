@@ -1,14 +1,23 @@
 "use client";
 import ToolBar from "@/components/ToolBar";
 import Recording from "@/components/Recording";
-import { data } from "../data/Recordings";
 import NavBar from "@/components/NavBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { colors } from "@/data/Categories";
+import axios from "axios";
 
 const home = () => {
-  const [recordings, setRecordings] = useState(data);
-
+  const [recordings, setRecordings] = useState([]);
+  useEffect(() => {
+    axios
+      .get("/api/video")
+      .then((response) => {
+        setRecordings(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <div className="w-full min-h-screen flex">
       <NavBar
@@ -24,6 +33,7 @@ const home = () => {
             <Recording
               key={index}
               id={recording.id}
+              videoId={recording.identifier}
               recordings={recordings}
               setRecordings={setRecordings}
               image={recording.image}
