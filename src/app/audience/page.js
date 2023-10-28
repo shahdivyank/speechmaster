@@ -1,4 +1,3 @@
-import { breakdown } from "@/data/Breakdown";
 const audience = () => {
   return (
     <div className="w-full flex justify-center">
