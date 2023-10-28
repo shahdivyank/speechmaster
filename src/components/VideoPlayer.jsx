@@ -2,17 +2,17 @@
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 
-const VideoPlayer = () => {
+const VideoPlayer = ({ videoId, controls }) => {
   const cld = new Cloudinary({
     cloud: {
       cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     },
   });
 
-  const myVideo = cld.video("ot45g9k1znimvsym3wjg");
+  const myVideo = cld.video(videoId);
   return (
     <div>
-      <AdvancedVideo cldVid={myVideo} controls />
+      <AdvancedVideo cldVid={myVideo} controls={controls} />
     </div>
   );
 };

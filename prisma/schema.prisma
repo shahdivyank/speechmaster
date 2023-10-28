@@ -62,3 +62,15 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verificationtokens")
 }
+
+model Videos {
+  identifier   String
+  title        String
+  categories   String
+  userId       String    @map("user_id") @db.Uuid
+  created      DateTime
+  score        Int
+
+  @@id([identifier])
+  @@map("videos")
+}
