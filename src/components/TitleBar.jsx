@@ -4,22 +4,22 @@ import Link from "next/link";
 
 import {
   BsCheckSquare,
-  BsSortDownAlt,
   BsSortAlphaDown,
   BsSortNumericDownAlt,
 } from "react-icons/bs";
 
+const format = "mx-1 active:opacity-70 hover:text-sm-orange cursor-pointer";
 const TitleBar = () => {
   return (
-    <div className="w-3/4 flex justify-between text-black font-poppins items-end p-3">
+    <div className="flex justify-between text-black font-poppins items-end pb-3 ease-in-out transition-transform">
       <p className="font-bold text-xl m-0 p-0">All Speeches</p>
       <div className="text-xl flex items-center">
-        <BsCheckSquare className="mx-1 active:opacity-70 hover:text-sm-orange cursor-pointer" />
-        <BsSortAlphaDown className="text-xl mx-1 active:opacity-70 hover:text-sm-orange cursor-pointer" />
-        <BsSortNumericDownAlt className="text-xl active:opacity-70 hover:text-sm-orange cursor-pointer" />
+        <BsCheckSquare className={`${format}`} />
+        <BsSortAlphaDown className={`${format} text-xl`} />
+        <BsSortNumericDownAlt className={`${format} text-xl`} />
         <Link
           href="/live"
-          className=" hover:scale-110 active:opacity-70 mx-1 no-underline text-white bg-sm-blue text-lg font-semibold rounded-full h-fit px-3.5 pb-0.5 text-center"
+          className=" hover:scale-110 active:opacity-70 ml-2 no-underline text-white bg-sm-blue ease-in-out transition-transform text-lg font-semibold rounded-full h-fit px-3.5 pb-0.5 text-center"
         >
           + new
         </Link>

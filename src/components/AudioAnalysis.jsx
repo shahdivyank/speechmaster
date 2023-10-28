@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 const AudioAnalysis = () => {
-const apiKey = process.env.NEXT_PUBLIC_HUME_AI_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_HUME_AI_KEY;
   const socketRef = useRef(WebSocket);
   const serverReadyRef = useRef(true);
 

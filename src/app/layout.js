@@ -20,7 +20,7 @@ export default function RootLayout({ children, session }) {
         refetchInterval={5 * 60}
         className="h-full"
       >
-        <body className="">{children}</body>
+        <body className="bg-sm-beige">{children}</body>
       </SessionProvider>
     </html>
   );
