@@ -13,6 +13,7 @@ const Recording = ({
 }) => {
   return (
     <div className={`w-full flex font-poppins p-3 ${format}`}>
+      <input className="mr-4" type="checkbox" />
       <Image
         src={image}
         alt="profile photo"

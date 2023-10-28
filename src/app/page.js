@@ -1,19 +1,19 @@
-import TitleBar from "@/components/TitleBar";
+import ToolBar from "@/components/ToolBar";
 import Recording from "@/components/Recording";
 import { recordings } from "../data/Recordings";
 import NavBar from "@/components/NavBar";
-import cat from "../../public/cat.png";
+import { user } from "@/data/User";
 const home = () => {
   return (
     <div className="w-full min-h-screen flex">
       <NavBar
-        image={cat}
-        name="Evan Littlecat"
-        email="evanmeow@email.com"
-        categories={["Workshop", "Class Presentation", "Others"]}
+        image={user.image}
+        name={user.name}
+        email={user.email}
+        categories={user.categories}
       />
       <div className="p-3 w-3/4 bg-sm-beige">
-        <TitleBar />
+        <ToolBar />
         {recordings.map((recording, index) => (
           <Recording
             key={index}

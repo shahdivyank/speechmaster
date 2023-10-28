@@ -1,5 +1,6 @@
 /* eslint-disable new-cap */
 "use client";
+import TitleBar from "@/components/TitleBar";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,7 +21,10 @@ export default function RootLayout({ children, session }) {
         refetchInterval={5 * 60}
         className="h-full"
       >
-        <body className="bg-sm-beige">{children}</body>
+        <body className="bg-sm-beige min-h-screen">
+          <TitleBar />
+          {children}
+        </body>
       </SessionProvider>
     </html>
   );

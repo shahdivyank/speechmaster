@@ -23,7 +23,7 @@ const NavBar = ({ name, email, categories, image }) => {
           </div>
         </div>
         <textarea
-          className=" px-3 pt-1 h-7 w-full bg-sm-lightgrey text-sm-grey rounded text-xs"
+          className=" resize-none px-3 pt-1 h-7 w-full bg-sm-lightgrey text-sm-grey rounded text-xs"
           placeholder="search"
         />
         <div className="my-3 flex items-center">
@@ -35,7 +35,10 @@ const NavBar = ({ name, email, categories, image }) => {
         </div>
 
         {categories.map((category, index) => (
-          <div className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-3 py-1 cursor-pointer">
+          <div
+            key={index}
+            className="hover:bg-gray-100 rounded-sm active:bg-gray-100 transition-transform flex items-center px-3 py-1 cursor-pointer"
+          >
             <div
               className={`mx-2 rounded-full w-2.5 h-2.5 ${
                 index % 3 === 0
