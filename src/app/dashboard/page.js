@@ -34,7 +34,7 @@ const home = () => {
         recordings={recordings}
         setRecordings={setRecordings}
       />
-      <div className="p-3 w-3/4 bg-sm-beige">
+      <div className="p-3 w-3/4">
         <ToolBar recordings={recordings} setRecordings={setRecordings} />
         {loading ? (
           <div className="w-full flex items-center gap-2 justify-center">
