@@ -18,7 +18,6 @@ const review = ({ params }) => {
   useEffect(() => {
     axios.get(`/api/video?videoId=${params.id}`).then((res) => {
       setVideo(res.data);
-      console.log(res.data);
       setTitle(res.data.title);
     });
   }, []);

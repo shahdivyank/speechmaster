@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import AudioAnalysis from "./AudioAnalysis";
 
-const AudioPlayer = ({ globalIsPlaying }) => {
+const AudioPlayer = ({
+  globalIsPlaying,
+  base64Audio,
+  setBase64Audio,
+  socket,
+}) => {
   const {
     startRecording,
     stopRecording,
@@ -13,14 +18,13 @@ const AudioPlayer = ({ globalIsPlaying }) => {
     recordingTime,
   } = useAudioRecorder(
     {
-      noiseSuppression: true,
-      echoCancellation: true,
+      noiseSuppression: false,
+      echoCancellation: false,
     },
     (err) => console.table(err), // onNotAllowedOrFound
   );
-  const [audios, setAudio] = useState([]);
-  const [base64Audio, setBase64Audio] = useState();
   const [localIsRecording, setLocalIsRecording] = useState(false);
+  const [currentBlob, setCurrentBlob] = useState(null);
 
   useEffect(() => {
     if (!globalIsPlaying) {
@@ -36,29 +40,26 @@ const AudioPlayer = ({ globalIsPlaying }) => {
       stopRecording();
       console.log("stopped recording audio");
     }
-    if (recordingBlob) {
+    if (recordingBlob && recordingBlob != currentBlob) {
+      setCurrentBlob(recordingBlob);
       addAudioElement(recordingBlob);
+      setLocalIsRecording(false);
     }
-  }, [globalIsPlaying, recordingTime, recordingBlob]);
+  }, [globalIsPlaying, recordingTime, localIsRecording, recordingBlob]);
 
   const addAudioElement = (blob) => {
-    const url = URL.createObjectURL(blob);
-    setAudio([...audios, url]);
-    console.log(audios);
-    {
-      audios.map((audio, index) => <div key={index} className="" />);
-      const reader = new FileReader();
-
-      console.log(blob);
-      reader.readAsDataURL(blob);
-      reader.onloadend = function () {
-        setBase64Audio(reader.result.split(",")[1]);
-      };
-      audios.map((audio, index) => <div key={index} className="" />);
-    }
+    const reader = new FileReader();
+    console.log(blob);
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      setBase64Audio(reader.result.split(",")[1]);
+    };
+    socket.emit("audio", reader.result);
   };
 
-  return <div>{base64Audio && <AudioAnalysis audioBlob={base64Audio} />}</div>;
+  return (
+    <div>{base64Audio && <AudioAnalysis base64Encoded={base64Audio} />}</div>
+  );
 };
 
 export default AudioPlayer;

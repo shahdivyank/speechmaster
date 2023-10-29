@@ -8,23 +8,26 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
 import AudioPlayer from "@/components/AudioPlayer";
-import Link from "next/link";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 import Checkbox from "@/components/Checkbox";
+import { useRouter } from "next/navigation";
 
 const live = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
+  const [base64Audio, setBase64Audio] = useState();
   const [tags, setTags] = useState({
     Workshops: false,
     "Class Presentations": false,
     Other: false,
   });
+  const [body, setBody] = useState("upper");
 
   const handleShare = () => {
     const link = `http://localhost:3000/join/${session.user.id}`;
@@ -91,7 +94,7 @@ const live = () => {
       reader.readAsDataURL(blob);
       reader.onloadend = function () {
         const base64data = reader.result;
-        console.log(base64data);
+
         axios
           .post(`/api/video`, {
             file: base64data,
@@ -99,16 +102,15 @@ const live = () => {
             categories: Object.keys(tags).filter((tag) => tags[tag]),
           })
           .then((res) => {
-            console.log(res);
             toast("✅ Video Uploaded Successfully");
           })
           .catch((err) => {
-            console.log(err);
             toast("❌ Internal Server Error");
           });
       };
 
       setRecordedVideo([]);
+      router.push("/dashboard");
     }
   }, [recordedVideo]);
 
@@ -130,8 +132,8 @@ const live = () => {
         if (poses[0]) {
           checkHeadTilt(poses[0].keypoints);
           checkShoulderTilt(poses[0].keypoints);
-          checkHipTilt(poses[0].keypoints);
-          checkLegTitle(poses[0].keypoints);
+          body === "upper" && checkHipTilt(poses[0].keypoints);
+          body === "upper" && checkLegTitle(poses[0].keypoints);
         }
       }
     }
@@ -238,10 +240,30 @@ const live = () => {
               </div>
             ))}
           </div>
+
+          <div className="flex">
+            {[
+              { name: "Upper Body Only", value: "upper" },
+              { name: "Whole Body", value: "whole" },
+            ].map((tag, index) => (
+              <div className="flex items-center mx-2" key={index}>
+                <Checkbox
+                  state={body === tag.value}
+                  onClick={() => setBody(tag.value)}
+                />
+                <div>{tag.name}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <Webcam mirrored={true} audio={true} ref={webcamRef} />
-        <AudioPlayer globalIsPlaying={recording} />
+        <Webcam mirrored={true} audio={false} ref={webcamRef} />
+        <AudioPlayer
+          globalIsPlaying={recording}
+          setBase64Audio={setBase64Audio}
+          base64Audio={base64Audio}
+          socket={socket}
+        />
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -263,13 +285,12 @@ const live = () => {
           )}
           <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
-            <Link
+            <button
               className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
-              href="/dashboard"
             >
               Upload
-            </Link>
+            </button>
           )}
         </div>
       </div>

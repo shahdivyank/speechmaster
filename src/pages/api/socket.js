@@ -27,6 +27,10 @@ const SocketHandler = async (req, res) => {
       socket.on("frames", (frame) => {
         socket.to(session.user.id).emit("frames", frame);
       });
+
+      socket.on("audio", (frame) => {
+        socket.to(session.user.id).emit("audio", frame);
+      });
     });
   }
   res.end();

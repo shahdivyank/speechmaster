@@ -35,7 +35,6 @@ export async function POST(req) {
 export async function GET(req) {
   const res = NextResponse;
   const videoId = req.nextUrl.searchParams.get("videoId");
-  console.log(videoId);
   if (videoId) {
     const response = await prisma.videos.findUnique({
       where: {
