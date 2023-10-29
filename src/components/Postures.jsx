@@ -6,7 +6,7 @@ const Postures = ({ postures }) => {
         return (
           <div key={index} className="flex items-center">
             <div
-              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-red w-6 text-center rounded`}
+              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-red w-8 justify-center flex text-center rounded`}
             >
               {postures.filter((item) => item.type == key).length}
             </div>

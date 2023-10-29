@@ -117,7 +117,7 @@ const review = ({ params }) => {
               <Postures postures={postures} />
               <div className="flex items-center">
                 <div
-                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-8 text-center rounded`}
+                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-8 justify-center flex text-center rounded`}
                 >
                   {
                     humes.filter((hume) =>
@@ -129,7 +129,7 @@ const review = ({ params }) => {
               </div>
               <div className="flex items-center">
                 <div
-                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-8 text-center rounded`}
+                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-8 justify-center flex text-center rounded`}
                 >
                   {
                     humes.filter((hume) =>

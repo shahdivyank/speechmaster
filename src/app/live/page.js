@@ -354,7 +354,7 @@ const Live = () => {
         <div className="bg-sm-lightgrey min-h-20 pb-2 px-2 pt-1 rounded-lg font-semibold">
           <div className="flex items-center my-2">
             <div
-              className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+              className={`p-1 bg-sm-red text-white flex w-8 justify-center rounded text-center mr-2 ${
                 notifs.length > 1 && notifs[notifs.length - 1].type === "face"
                   ? "font-bold"
                   : "font"
@@ -376,7 +376,7 @@ const Live = () => {
           </div>
           <div className="flex items-center my-2">
             <div
-              className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+              className={`p-1 bg-sm-red text-white flex w-8 justify-center rounded text-center mr-2 ${
                 notifs.length && notifs[notifs.length - 1].type === "shoulder"
                   ? "font-bold"
                   : "font"
@@ -398,7 +398,7 @@ const Live = () => {
           {body === "whole" && (
             <div className="flex items-center my-2">
               <div
-                className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                className={`p-1 bg-sm-red text-white flex w-8 justify-center rounded text-center mr-2 ${
                   notifs.length && notifs[notifs.length - 1].type === "hip"
                     ? "font-bold"
                     : "font"
@@ -421,7 +421,7 @@ const Live = () => {
           {body === "whole" && (
             <div className="flex items-center my-2">
               <div
-                className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                className={`p-1 bg-sm-red text-white flex w-8 justify-center rounded text-center mr-2 ${
                   notifs.length && notifs[notifs.length - 1].type === "leg"
                     ? "font-bold"
                     : "font"
