@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import divider from "../../../public/divider.svg";
-import logo from "../../../public/logo2.svg";
+import divider from "../../public/divider.svg";
+import logo from "../../public/logo2.svg";
 import { BsGoogle } from "react-icons/bs";
 import { signIn } from "next-auth/react";
 const login = () => {
