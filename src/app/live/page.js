@@ -34,6 +34,7 @@ const Live = () => {
   });
   const [body, setBody] = useState("upper");
   const [DBEmotions, setDBEmotions] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   const handleShare = () => {
     const link = `http://localhost:3000/join/${session.user.id}`;
@@ -60,7 +61,7 @@ const Live = () => {
     socket.emit("join", session.user.id);
 
     socket.on("message", (message) => {
-      console.log("ADD API CALL HERE", message);
+      setMessages([...messages, { message, timestamp: new Date() }]);
     });
 
     const id = setInterval(() => {
@@ -119,6 +120,7 @@ const Live = () => {
             created: startTime,
             postures: notifs,
             humes: DBEmotions,
+            messages: messages,
           })
           .then((res) => {
             toast("✅ Video Uploaded Successfully");

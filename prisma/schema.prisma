@@ -94,3 +94,13 @@ model Hume {
 
   @@map("hume")
 }
+
+model Messages {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoId       String
+  userImg       String?
+  message       String
+  timestamp     DateTime
+  
+  @@map("messages")
+}

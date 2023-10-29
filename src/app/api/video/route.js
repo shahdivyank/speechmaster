@@ -15,7 +15,7 @@ cloudinary.config({
 export async function POST(req) {
   const session = await getServerSession(authOptions);
   const res = NextResponse;
-  const { file, title, categories, created, postures, humes } =
+  const { file, title, categories, created, postures, humes, messages } =
     await req.json();
   const video = await cloudinary.v2.uploader.upload(file, {
     resource_type: "video",
@@ -57,6 +57,15 @@ export async function POST(req) {
       },
     });
   });
+  messages.forEach(async (message) => {
+    await prisma.messages.create({
+      data: {
+        ...message,
+        userImg: "img",
+        videoId: video.public_id,
+      },
+    });
+  });
   return res.json(200);
 }
 
@@ -89,6 +98,16 @@ export async function GET(req) {
       },
     ],
   });
+  const messages = await prisma.messages.findMany({
+    where: {
+      videoId: videoId,
+    },
+    orderBy: [
+      {
+        timestamp: "desc",
+      },
+    ],
+  });
   return res.json({
     video: response,
     postures: postures.map((posture) => {
@@ -106,6 +125,15 @@ export async function GET(req) {
         check: "humes",
         timestamp:
           Math.abs(new Date(hume.timestamp) - new Date(response.created)) /
+          1000,
+      };
+    }),
+    messages: messages.map((message) => {
+      return {
+        ...message,
+        check: "messages",
+        timestamp:
+          Math.abs(new Date(message.timestamp) - new Date(response.created)) /
           1000,
       };
     }),

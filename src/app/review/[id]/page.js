@@ -15,6 +15,7 @@ import { EMOTIONS_NEG, EMOTIONS_POS } from "@/data/Emotions";
 const review = ({ params }) => {
   const [title, setTitle] = useState("");
   const [vedio, setVedio] = useState({});
+  const [messages, setMessages] = useState([]);
   const [breakdownView, setBreakdownView] = useState(false);
   const [postures, setPostures] = useState([]);
   const [humes, setHumes] = useState([]);
@@ -26,6 +27,8 @@ const review = ({ params }) => {
       setTitle(res.data.video.title);
       setPostures(res.data.postures);
       setHumes(res.data.humes);
+      setMessages(res.data.messages);
+      console.log(res.data);
     });
   }, []);
   return (
@@ -64,6 +67,7 @@ const review = ({ params }) => {
           humes={humes}
           postures={postures}
           setSelectedTag={setSelectedTag}
+          messages={messages}
         />
       </div>
 
@@ -73,6 +77,7 @@ const review = ({ params }) => {
             postures={postures}
             humes={humes}
             setBreakdownView={setBreakdownView}
+            messages={messages}
           />
         ) : (
           <>
