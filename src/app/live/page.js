@@ -37,7 +37,7 @@ const Live = () => {
   const [messages, setMessages] = useState([]);
 
   const handleShare = () => {
-    const link = `http://localhost:3000/join/${session.user.id}`;
+    const link = `${process.env.NEXT_PUBLIC_DOMAIN}/join/${session.user.id}`;
     navigator.clipboard.writeText(link);
     toast("✅ Link copied to clipboard");
   };
