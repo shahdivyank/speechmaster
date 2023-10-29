@@ -244,7 +244,7 @@ const Live = () => {
         ...notifs,
         {
           timestamp: new Date(),
-          type: "hip",
+          type: "leg",
           message: "Avoid extra leg movement!",
         },
       ]);
@@ -338,14 +338,16 @@ const Live = () => {
           <div className="flex items-center my-2">
             <div
               className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
-                notifs[notifs.length - 1].type === "face" ? "font-bold" : "font"
+                notifs.length > 1 && notifs[notifs.length - 1].type === "face"
+                  ? "font-bold"
+                  : "font"
               }`}
             >
               {notifs.filter((notif) => notif.type === "face").length}
             </div>
             <p
               className={`m-0 ${
-                notifs[notifs.length - 1].type === "face"
+                notifs.length && notifs[notifs.length - 1].type === "face"
                   ? "font-bold"
                   : "font-normal"
               }`}
@@ -358,7 +360,7 @@ const Live = () => {
           <div className="flex items-center my-2">
             <div
               className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
-                notifs[notifs.length - 1].type === "shoulder"
+                notifs.length && notifs[notifs.length - 1].type === "shoulder"
                   ? "font-bold"
                   : "font"
               }`}
@@ -367,7 +369,7 @@ const Live = () => {
             </div>
             <p
               className={`m-0 ${
-                notifs[notifs.length - 1].type === "shoulder"
+                notifs.length && notifs[notifs.length - 1].type === "shoulder"
                   ? "font-bold"
                   : "font-normal"
               }`}
@@ -380,7 +382,7 @@ const Live = () => {
             <div className="flex items-center my-2">
               <div
                 className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
-                  notifs[notifs.length - 1].type === "hip"
+                  notifs.length && notifs[notifs.length - 1].type === "hip"
                     ? "font-bold"
                     : "font"
                 }`}
@@ -389,7 +391,7 @@ const Live = () => {
               </div>
               <p
                 className={`m-0 ${
-                  notifs[notifs.length - 1].type === "hip"
+                  notifs.length && notifs[notifs.length - 1].type === "hip"
                     ? "font-bold"
                     : "font-normal"
                 }`}
@@ -403,7 +405,7 @@ const Live = () => {
             <div className="flex items-center my-2">
               <div
                 className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
-                  notifs[notifs.length - 1].type === "leg"
+                  notifs.length && notifs[notifs.length - 1].type === "leg"
                     ? "font-bold"
                     : "font"
                 }`}
@@ -412,7 +414,7 @@ const Live = () => {
               </div>
               <p
                 className={`m-0 ${
-                  notifs[notifs.length - 1].type === "leg"
+                  notifs.length && notifs[notifs.length - 1].type === "leg"
                     ? "font-bold"
                     : "font-normal"
                 }`}
