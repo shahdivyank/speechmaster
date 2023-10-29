@@ -94,7 +94,7 @@ const live = () => {
       reader.readAsDataURL(blob);
       reader.onloadend = function () {
         const base64data = reader.result;
-        console.log(base64data);
+
         axios
           .post(`/api/video`, {
             file: base64data,
@@ -102,11 +102,9 @@ const live = () => {
             categories: Object.keys(tags).filter((tag) => tags[tag]),
           })
           .then((res) => {
-            console.log(res);
             toast("✅ Video Uploaded Successfully");
           })
           .catch((err) => {
-            console.log(err);
             toast("❌ Internal Server Error");
           });
       };
