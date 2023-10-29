@@ -10,7 +10,7 @@ const home = () => {
   const [recordings, setRecordings] = useState([]);
   useEffect(() => {
     axios
-      .get("/api/video")
+      .get("/api/videos")
       .then((response) => {
         setRecordings(
           response.data.map((r) => ({
@@ -46,6 +46,7 @@ const home = () => {
                 recordings={recordings}
                 setRecordings={setRecordings}
                 image={recording.image}
+                score={recording.score}
                 title={recording.title}
                 created={recording.created}
                 modified={recording.modified}
@@ -53,7 +54,7 @@ const home = () => {
                 selected={recording.selected}
                 categories={recording.categories}
                 format={`${
-                  index % 2 === 0 ? "bg-sm-lightgrey/40" : "bg-sm-white/40"
+                  index % 2 === 0 ? "bg-sm-lightgrey/40" : "bg-sm-white/50"
                 } ${
                   index === 0
                     ? "rounded-t-lg"

@@ -3,17 +3,17 @@ import prisma from "../../../../prismaClient";
 
 export async function POST(req) {
   const res = NextResponse;
-  const { timeStamp, message, type, videoId } = await req.json();
+  const { humes, videoId } = await req.json();
 
-  const snapshot = await prisma.hume.create({
-    data: {
-      videoId: videoId,
-      timeStamp: timeStamp,
-      message: message,
-      type: type.join(","),
-    },
+  humes.forEach(async (hume) => {
+    await prisma.hume.create({
+      data: {
+        ...hume,
+        videoId: videoId,
+      },
+    });
   });
-  return res.json(snapshot);
+  return res.json(200);
 }
 
 export async function GET(req) {
