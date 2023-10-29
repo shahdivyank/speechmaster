@@ -4,23 +4,20 @@ import { useAudioRecorder } from "react-audio-voice-recorder";
 import AudioAnalysis from "./AudioAnalysis";
 
 const AudioPlayer = ({
-  globalIsPlaying, setDBEmotions,
+  globalIsPlaying,
+  setDBEmotions,
   base64Audio,
   setBase64Audio,
   socket,
 }) => {
-  const {
-    startRecording,
-    stopRecording,
-    recordingBlob,
-    recordingTime,
-  } = useAudioRecorder(
-    {
-      noiseSuppression: false,
-      echoCancellation: false,
-    },
-    (err) => console.table(err), // onNotAllowedOrFound
-  );
+  const { startRecording, stopRecording, recordingBlob, recordingTime } =
+    useAudioRecorder(
+      {
+        noiseSuppression: false,
+        echoCancellation: false,
+      },
+      (err) => console.table(err), // onNotAllowedOrFound
+    );
   const [localIsRecording, setLocalIsRecording] = useState(false);
   const [currentBlob, setCurrentBlob] = useState(null);
 

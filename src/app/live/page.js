@@ -292,7 +292,6 @@ const Live = () => {
           </div>
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
-        
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -326,12 +325,10 @@ const Live = () => {
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
         <p className="font-bold text-xl p-0">emotional tone</p>
         <AudioPlayer
-          
           globalIsPlaying={recording}
           setBase64Audio={setBase64Audio}
           base64Audio={base64Audio}
           socket={socket}
-        
           setDBEmotions={setDBEmotions}
         />
       </div>
