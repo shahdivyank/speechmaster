@@ -8,12 +8,13 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
 import AudioPlayer from "@/components/AudioPlayer";
-import Link from "next/link";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 import Checkbox from "@/components/Checkbox";
+import { useRouter } from "next/navigation";
 
 const live = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
@@ -63,7 +64,7 @@ const live = () => {
     });
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
-      handleDataAvailable,
+      handleDataAvailable
     );
     mediaRecorderRef.current.start();
   }, [webcamRef, setRecording, mediaRecorderRef]);
@@ -74,7 +75,7 @@ const live = () => {
         setRecordedVideo((prev) => prev.concat(data));
       }
     },
-    [setRecordedVideo],
+    [setRecordedVideo]
   );
 
   const handleStopRecording = useCallback(() => {
@@ -109,13 +110,14 @@ const live = () => {
       };
 
       setRecordedVideo([]);
+      router.push("/dashboard");
     }
   }, [recordedVideo]);
 
   const load = async () => {
     const detector = await poseDetection.createDetector(
       poseDetection.SupportedModels.MoveNet,
-      { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING },
+      { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
     );
 
     setInterval(() => {
@@ -263,13 +265,12 @@ const live = () => {
           )}
           <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
-            <Link
+            <button
               className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
-              href="/dashboard"
             >
               Upload
-            </Link>
+            </button>
           )}
         </div>
       </div>
