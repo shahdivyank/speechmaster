@@ -21,6 +21,7 @@ const live = () => {
   const mediaRecorderRef = useRef(null);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
+  const [base64Audio, setBase64Audio] = useState();
   const [tags, setTags] = useState({
     Workshops: false,
     "Class Presentations": false,
@@ -64,7 +65,7 @@ const live = () => {
     });
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
-      handleDataAvailable
+      handleDataAvailable,
     );
     mediaRecorderRef.current.start();
   }, [webcamRef, setRecording, mediaRecorderRef]);
@@ -75,7 +76,7 @@ const live = () => {
         setRecordedVideo((prev) => prev.concat(data));
       }
     },
-    [setRecordedVideo]
+    [setRecordedVideo],
   );
 
   const handleStopRecording = useCallback(() => {
@@ -117,7 +118,7 @@ const live = () => {
   const load = async () => {
     const detector = await poseDetection.createDetector(
       poseDetection.SupportedModels.MoveNet,
-      { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
+      { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING },
     );
 
     setInterval(() => {
@@ -243,7 +244,12 @@ const live = () => {
         </div>
 
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
-        <AudioPlayer globalIsPlaying={recording} />
+        <AudioPlayer
+          globalIsPlaying={recording}
+          setBase64Audio={setBase64Audio}
+          base64Audio={base64Audio}
+          socket={socket}
+        />
 
         <div className="flex gap-3 items-center">
           {recording ? (
