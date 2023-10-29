@@ -12,13 +12,15 @@ import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 import Checkbox from "@/components/Checkbox";
 import { useRouter } from "next/navigation";
+import { useInterval } from "@/components/useInterval";
 
-const live = () => {
+const Live = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
+  const [notifs, setNotifs] = useState([]);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
   const [base64Audio, setBase64Audio] = useState();
@@ -46,7 +48,7 @@ const live = () => {
     };
 
     loadup();
-    load();
+    // load();
 
     socket.connect();
 
@@ -114,33 +116,39 @@ const live = () => {
     }
   }, [recordedVideo]);
 
-  const load = async () => {
+  // const load = async () => {
+  //   const detector = await poseDetection.createDetector(
+  //     poseDetection.SupportedModels.MoveNet,
+  //     { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
+  //   );
+  // };
+
+  useInterval(async () => {
     const detector = await poseDetection.createDetector(
       poseDetection.SupportedModels.MoveNet,
       { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING },
     );
-
-    setInterval(() => {
-      detect(detector);
-    }, 200);
-  };
+    detect(detector);
+  }, 3000);
 
   const detect = async (detector) => {
+    console.log(notifs);
     if (detector && webcamRef) {
       if (webcamRef.current.video) {
         const poses = await detector.estimatePoses(webcamRef.current.video);
         if (poses[0]) {
           checkHeadTilt(poses[0].keypoints);
           checkShoulderTilt(poses[0].keypoints);
-          body === "upper" && checkHipTilt(poses[0].keypoints);
-          body === "upper" && checkLegTitle(poses[0].keypoints);
+          console.log(body);
+          body !== "upper" && checkHipTilt(poses[0].keypoints);
+          body !== "upper" && checkLegTitle(poses[0].keypoints);
         }
       }
     }
     requestAnimationFrame(detect);
   };
 
-  const checkHeadTilt = (poses) => {
+  const checkHeadTilt = async (poses) => {
     const leftEye = poses[1];
     const leftEar = poses[3];
 
@@ -148,11 +156,19 @@ const live = () => {
     const rightEar = poses[4];
 
     if (leftEar.y < leftEye.y || rightEar.y < rightEye.y) {
+      setNotifs((prev) => [
+        ...prev,
+        {
+          timestamp: new Date(),
+          type: "face",
+          message: "Make sure to look towards the audience!",
+        },
+      ]);
       console.log("LOOKING DOWN");
     }
   };
 
-  const checkShoulderTilt = (poses) => {
+  const checkShoulderTilt = async (poses) => {
     const leftShoulder = poses[5];
     const rightShoulder = poses[6];
 
@@ -164,11 +180,19 @@ const live = () => {
       rightShoulder.y + margin < leftShoulder.y ||
       rightShoulder.y - margin > leftShoulder.y
     ) {
+      setNotifs([
+        ...notifs,
+        {
+          timestamp: new Date(),
+          type: "shoulder",
+          message: "Attempt to stand straight!",
+        },
+      ]);
       console.log("shoulders misaligned");
     }
   };
 
-  const checkHipTilt = (poses) => {
+  const checkHipTilt = async (poses) => {
     const leftHip = poses[11];
     const rightHip = poses[12];
 
@@ -180,11 +204,19 @@ const live = () => {
       rightHip.y + margin < leftHip.y ||
       rightHip.y - margin > leftHip.y
     ) {
+      setNotifs([
+        ...notifs,
+        {
+          timestamp: new Date(),
+          type: "hip",
+          message: "Attempt to stand straight!",
+        },
+      ]);
       console.log("shoulders misaligned");
     }
   };
 
-  const checkLegTitle = (poses) => {
+  const checkLegTitle = async (poses) => {
     const leftHip = poses[11];
     const rightHip = poses[12];
 
@@ -196,24 +228,25 @@ const live = () => {
 
     const margin = 25;
 
-    console.log(leftHip.x, leftKnee.x, leftAnkle.x);
-
     if (
       leftHip.x + margin < leftKnee.x ||
       leftHip.x - margin > leftKnee.x ||
       leftHip.x + margin < leftAnkle.x ||
-      leftHip.x - margin > leftAnkle.x
-    ) {
-      console.log("LEFT LEG IN CHECK");
-    }
-
-    if (
+      leftHip.x - margin > leftAnkle.x ||
       rightHip.x + margin < rightKnee.x ||
       rightHip.x - margin > rightKnee.x ||
       rightHip.x + margin < rightAnkle.x ||
       rightHip.x - margin > rightAnkle.x
     ) {
-      console.log("RIGHT LEG IN CHECK");
+      setNotifs([
+        ...notifs,
+        {
+          timestamp: new Date(),
+          type: "hip",
+          message: "Avoid moving your legs too much!",
+        },
+      ]);
+      console.log("KEEP LEG IN CHECK");
     }
   };
   return (
@@ -301,4 +334,4 @@ const live = () => {
   );
 };
 
-export default live;
+export default Live;
