@@ -10,7 +10,7 @@ const NavBar = () => {
   return (
     <div className="bg-sm-white justify-between flex px-3 py-2">
       <Link
-        href="/"
+        href="/dashboard"
         className="scale-95 hover:opacity-80 active:opacity-60 transition-transform"
       >
         <Image src={logo} />

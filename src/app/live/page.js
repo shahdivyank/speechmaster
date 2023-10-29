@@ -7,6 +7,8 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
+import AudioPlayer from "@/components/AudioPlayer";
+import Link from "next/link";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 
@@ -221,6 +223,8 @@ const live = () => {
           />
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
+        <AudioPlayer globalIsPlaying={recording} />
+
         <div className="flex gap-3 items-center">
           {recording ? (
             <BsStopCircle
@@ -241,12 +245,13 @@ const live = () => {
           )}
           <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
-            <div
-              className="bg-sm-red text-lg font-semibold text-white px-3 py-2 rounded-sm hover:cursor-pointer"
+            <Link
+              className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
+              href="/dashboard"
             >
               Upload
-            </div>
+            </Link>
           )}
         </div>
       </div>
