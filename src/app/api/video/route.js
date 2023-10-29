@@ -16,7 +16,9 @@ export async function POST(req) {
   const { file, title, categories } = await req.json();
   const video = await cloudinary.v2.uploader.upload(file, {
     resource_type: "video",
+    raw_convert: "google_speech",
   });
+  console.log(video.info.raw_convert.google_speech);
   const snapshot = await prisma.videos.create({
     data: {
       identifier: video.public_id,
