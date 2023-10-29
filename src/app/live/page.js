@@ -331,13 +331,15 @@ const Live = () => {
               }}
             />
           )}
-          {recordedVideo.length > 0 && (
+          {recordedVideo.length > 0 ? (
             <button
               className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
             >
               Upload
             </button>
+          ) : (
+            <div></div>
           )}
           {loading && (
             <div className="flex items-center gap-2">
