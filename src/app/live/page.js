@@ -134,8 +134,8 @@ const live = () => {
         if (poses[0]) {
           checkHeadTilt(poses[0].keypoints);
           checkShoulderTilt(poses[0].keypoints);
-          checkHipTilt(poses[0].keypoints);
-          checkLegTitle(poses[0].keypoints);
+          body === "upper" && checkHipTilt(poses[0].keypoints);
+          body === "upper" && checkLegTitle(poses[0].keypoints);
         }
       }
     }
@@ -253,7 +253,6 @@ const live = () => {
                   state={body === tag.value}
                   onClick={() => setBody(tag.value)}
                 />
-                {console.log(body)}
                 <div>{tag.name}</div>
               </div>
             ))}
