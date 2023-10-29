@@ -1,6 +1,5 @@
 "use client";
 import { BsArrowRightShort } from "react-icons/bs";
-import { breakdown } from "@/data/Breakdown";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "react-circular-progressbar/dist/styles.css";
@@ -11,43 +10,23 @@ import toast from "react-hot-toast";
 import Postures from "@/components/Postures";
 import Details from "@/components/Details";
 import BreakDown from "@/components/BreakDown";
+import { EMOTIONS_NEG, EMOTIONS_POS } from "@/data/Emotions";
 
 const review = ({ params }) => {
-  const [tags, setTags] = useState([]);
   const value = 78;
   const [title, setTitle] = useState("");
-  const [video, setVideo] = useState({});
   const [breakdownView, setBreakdownView] = useState(false);
   const [postures, setPostures] = useState([]);
+  const [humes, setHumes] = useState([]);
   const [selectedTag, setSelectedTag] = useState({});
 
   useEffect(() => {
-    setTags(
-      postures.map((posture) => {
-        return {
-          type: "posture",
-          pos: posture.type,
-          message: posture.message,
-          time:
-            Math.abs(new Date(posture.timestamp) - new Date(video.created)) /
-            1000,
-          color: "text-sm-red",
-          note: posture.type,
-        };
-      }),
-    );
-  }, [postures]);
-  useEffect(() => {
     axios.get(`/api/video?videoId=${params.id}`).then((res) => {
-      setVideo(res.data);
-      setTitle(res.data.title);
+      setTitle(res.data.video.title);
+      setPostures(res.data.postures);
+      setHumes(res.data.humes);
     });
-    axios.get(`/api/posture?videoId=${params.id}`).then((res) => {
-      setPostures(res.data);
-    });
-    // console.log(video);
   }, []);
-  console.log(postures);
   return (
     <div className="w-full flex justify-center bg-sm-beige h-[90vh]">
       <div className="w-8/12 flex flex-col">
@@ -81,7 +60,7 @@ const review = ({ params }) => {
           videoId={params.id}
           timeLine={true}
           controls={false}
-          tags={tags}
+          humes={humes}
           postures={postures}
           setSelectedTag={setSelectedTag}
         />
@@ -91,7 +70,7 @@ const review = ({ params }) => {
         {breakdownView ? (
           <BreakDown
             postures={postures}
-            tags={tags}
+            humes={humes}
             setBreakdownView={setBreakdownView}
           />
         ) : (
@@ -104,7 +83,7 @@ const review = ({ params }) => {
                   axios
                     .post("/api/outline", { videoId: params.id })
                     .then((res) => {
-                      console.log(res.data.url);
+                      // console.log(res.data.url);
                       const url = res.data.url;
                       const a = document.createElement("a");
                       document.body.appendChild(a);
@@ -135,18 +114,30 @@ const review = ({ params }) => {
             </p>
             <div className=" p-2 rounded-2xl bg-sm-lightbeige w-11/12">
               <Postures postures={postures} />
-              {breakdown.map((item, index) => (
-                <div key={index} className="flex items-center">
-                  <div
-                    className={`mr-2 text-sm-white font-bold my-1 aspect-square ${
-                      item.behavior === "comment" ? "bg-sm-blue" : "bg-sm-red"
-                    } w-6 text-center rounded`}
-                  >
-                    {item.count}
-                  </div>
-                  {item.behavior}
+              <div className="flex items-center">
+                <div
+                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-8 text-center rounded`}
+                >
+                  {
+                    humes.filter((hume) =>
+                      EMOTIONS_POS.includes(hume.emotionName),
+                    ).length
+                  }
                 </div>
-              ))}
+                Positive Tone
+              </div>
+              <div className="flex items-center">
+                <div
+                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-8 text-center rounded`}
+                >
+                  {
+                    humes.filter((hume) =>
+                      EMOTIONS_NEG.includes(hume.emotionName),
+                    ).length
+                  }
+                </div>
+                Negative Tone
+              </div>
             </div>
             <Details data={selectedTag} />
           </>

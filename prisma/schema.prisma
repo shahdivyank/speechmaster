@@ -87,10 +87,10 @@ model Posture {
 }
 
 model Hume {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  videoId     String
-  timeStamp   DateTime
-  emotion     String
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoId       String
+  timestamp     DateTime
+  emotionName   String
 
   @@map("hume")
 }

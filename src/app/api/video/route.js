@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "../../../../prismaClient";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { POSTURES } from "@/data/Posture";
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -13,12 +14,13 @@ cloudinary.config({
 export async function POST(req) {
   const session = await getServerSession(authOptions);
   const res = NextResponse;
-  const { file, title, categories, created } = await req.json();
+  const { file, title, categories, created, postures, humes } =
+    await req.json();
   const video = await cloudinary.v2.uploader.upload(file, {
     resource_type: "video",
     raw_convert: "google_speech",
   });
-  const snapshot = await prisma.videos.create({
+  await prisma.videos.create({
     data: {
       identifier: video.public_id,
       userId: session.user.id,
@@ -28,35 +30,77 @@ export async function POST(req) {
       categories: categories.join(","),
     },
   });
-  return res.json(snapshot);
+
+  postures.forEach(async (posture) => {
+    await prisma.posture.create({
+      data: {
+        ...posture,
+        videoId: video.public_id,
+        type: POSTURES[posture.type],
+      },
+    });
+  });
+  humes.forEach(async (hume) => {
+    await prisma.hume.create({
+      data: {
+        ...hume,
+        videoId: video.public_id,
+      },
+    });
+  });
+  return res.json(200);
 }
 
 export async function GET(req) {
   const res = NextResponse;
   const videoId = req.nextUrl.searchParams.get("videoId");
-  if (videoId) {
-    const response = await prisma.videos.findUnique({
-      where: {
-        identifier: videoId,
+
+  const response = await prisma.videos.findUnique({
+    where: {
+      identifier: videoId,
+    },
+  });
+  const postures = await prisma.posture.findMany({
+    where: {
+      videoId: videoId,
+    },
+    orderBy: [
+      {
+        timestamp: "desc",
       },
-    });
-    if (response) return res.json(response);
-    else return res.json(500);
-  } else {
-    const session = await getServerSession(authOptions);
-    const response = await prisma.videos.findMany({
-      where: {
-        userId: session.user.id,
+    ],
+  });
+  const humes = await prisma.hume.findMany({
+    where: {
+      videoId: videoId,
+    },
+    orderBy: [
+      {
+        timestamp: "desc",
       },
-      orderBy: [
-        {
-          created: "desc",
-        },
-      ],
-    });
-    if (response) return res.json(response);
-    else return res.json(500);
-  }
+    ],
+  });
+  return res.json({
+    video: response,
+    postures: postures.map((posture) => {
+      return {
+        ...posture,
+        check: "postures",
+        timestamp:
+          Math.abs(new Date(posture.timestamp) - new Date(response.created)) /
+          1000,
+      };
+    }),
+    humes: humes.map((hume) => {
+      return {
+        ...hume,
+        check: "humes",
+        timestamp:
+          Math.abs(new Date(hume.timestamp) - new Date(response.created)) /
+          1000,
+      };
+    }),
+  });
 }
 
 export async function PUT(req) {

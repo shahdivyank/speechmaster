@@ -31,7 +31,13 @@ const ToolBar = ({ recordings, setRecordings }) => {
 
   return (
     <div className="flex justify-between text-black font-poppins items-end pb-3 ease-in-out transition-transform">
-      <p className="font-bold text-xl m-0 p-0">All Speeches</p>
+      <div className="flex gap-2">
+        <p className="font-bold text-xl m-0 p-0">All Speeches</p>
+        <p className="font-bold text-xl m-0 p-0 text-sm-red">
+          {recordings.length}
+        </p>
+      </div>
+
       <div className="text-xl flex items-center">
         <BsTrash3 className={`${format}`} onClick={handleDelete} />
         <Link

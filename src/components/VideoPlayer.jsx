@@ -4,13 +4,14 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { BiSolidMap } from "react-icons/bi";
+import { EMOTIONS_NEG } from "@/data/Emotions";
 
 const VideoPlayer = ({
-  videoCreated,
   videoId,
   controls,
   timeLine,
-  tags,
+  humes,
+  postures,
   setSelectedTag,
 }) => {
   const [toggle, setToggle] = useState(false);
@@ -22,7 +23,6 @@ const VideoPlayer = ({
   const [value, setValue] = useState(0);
   const videoRef = useRef(null);
   const myVideo = cld.video(videoId);
-  // console.log(myVideo);
   useEffect(() => {
     videoRef.current.currentTime = 1000000;
   }, []);
@@ -65,9 +65,9 @@ const VideoPlayer = ({
       <div className="relative w-full">
         {timeLine &&
           videoRef.current &&
-          tags.map((tag, index) => {
+          postures.map((posture, index) => {
             const pos = `${parseInt(
-              (tag.time / videoRef.current.duration) * 100,
+              (posture.timestamp / videoRef.current.duration) * 100,
             )}`;
             return (
               <div
@@ -78,13 +78,44 @@ const VideoPlayer = ({
                 }}
                 key={index}
                 onClick={() => {
-                  setSelectedTag(tag);
-                  setValue(tag.time);
-                  videoRef.current.currentTime = tag.time;
+                  setSelectedTag(posture);
+                  setValue(posture.timestamp);
+                  videoRef.current.currentTime = posture.timestamp;
                 }}
               >
                 <BiSolidMap
-                  className={tag.color + " hover:cursor-pointer"}
+                  className="text-sm-red hover:cursor-pointer"
+                  size={30}
+                />
+              </div>
+            );
+          })}
+        {timeLine &&
+          videoRef.current &&
+          humes.map((hume, index) => {
+            const pos = `${parseInt(
+              (hume.timestamp / videoRef.current.duration) * 100,
+            )}`;
+            return (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: `${pos}` + "%",
+                }}
+                key={index}
+                onClick={() => {
+                  setSelectedTag(hume);
+                  setValue(hume.timestamp);
+                  videoRef.current.currentTime = hume.timestamp;
+                }}
+              >
+                <BiSolidMap
+                  className={`hover:cursor-pointer ${
+                    EMOTIONS_NEG.includes(hume.emotionName)
+                      ? "text-sm-orange"
+                      : "text-sm-blue"
+                  }`}
                   size={30}
                 />
               </div>

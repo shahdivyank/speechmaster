@@ -110,26 +110,19 @@ const Live = () => {
             title: title,
             categories: Object.keys(tags).filter((tag) => tags[tag]),
             created: startTime,
+            postures: notifs,
+            humes: DBEmotions,
           })
           .then((res) => {
             toast("✅ Video Uploaded Successfully");
-            console.log(res.data.identifier);
-            axios
-              .post(`/api/posture`, {
-                postures: notifs,
-                videoId: res.data.identifier,
-              })
-              .then((res) => {
-                toast("✅ Postures Uploaded Successfully");
-                setRecordedVideo([]);
-                router.push("/dashboard");
-                setLoading(false);
-              });
+            setRecordedVideo([]);
+            router.push("/dashboard");
+            setLoading(false);
           })
           .catch((err) => {
             toast("❌ Internal Server Error");
           });
-        console.log("final notifs", notifs);
+        // console.log("final notifs", notifs);
       };
     }
   }, [recordedVideo]);
@@ -280,9 +273,10 @@ const Live = () => {
             }}
           />
 
-          <div className="flex">
+          <div className="flex font-semibold">
+            Categories:
             {["Workshops", "Class Presentations", "Other"].map((tag, index) => (
-              <div className="flex items-center mx-2" key={index}>
+              <div className="flex items-center mx-2 font-normal" key={index}>
                 <Checkbox
                   state={tags[tag]}
                   onClick={() => setTags({ ...tags, [tag]: !tags[tag] })}
@@ -292,12 +286,13 @@ const Live = () => {
             ))}
           </div>
 
-          <div className="flex">
+          <div className="flex font-semibold">
+            Gesture:
             {[
               { name: "Upper Body Only", value: "upper" },
               { name: "Whole Body", value: "whole" },
             ].map((tag, index) => (
-              <div className="flex items-center mx-2" key={index}>
+              <div className="flex items-center mx-2 font-normal" key={index}>
                 <Checkbox
                   state={body === tag.value}
                   onClick={() => setBody(tag.value)}
