@@ -18,6 +18,8 @@ const Page = ({ params }) => {
       const voice = new Audio(audio);
       voice.play();
     });
+
+    return () => socket.disconnect();
   }, []);
 
   return (

@@ -63,7 +63,10 @@ const Live = () => {
       capture();
     }, 20);
 
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id);
+      socket.disconnect();
+    };
   }, []);
 
   const handleStartRecording = useCallback(() => {
@@ -302,7 +305,7 @@ const Live = () => {
             ))}
           </div>
         </div>
-        <Webcam mirrored={true} audio={false} ref={webcamRef} />
+        <Webcam mirrored={true} audio={true} ref={webcamRef} />
 
         <div className="flex gap-3 items-center">
           {recording ? (
