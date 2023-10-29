@@ -7,12 +7,12 @@ import { signIn } from "next-auth/react";
 const login = () => {
   return (
     <div className="flex font-poppins justify-center items-center w-full h-screen bg-gradient-to-br from-sm-orange via-sm-red to-sm-blue">
-      <div className="w-1/2 flex ">
-        <div className="w-1/2 flex justify-center items-center opacity-90 bg-sm-beige h-80 rounded-l-lg">
+      <div className="w-1/2 flex h-2/3">
+        <div className="w-1/2 flex justify-center items-center opacity-90 bg-sm-beige h-full rounded-l-lg">
           <Image className="opcaity-80" src={logo} />
         </div>
 
-        <div className="w-1/2 p-6 bg-sm-white flex flex-col items-center h-80 rounded-r-lg">
+        <div className="w-1/2 p-6 bg-sm-white flex flex-col items-center h-full justify-center rounded-r-lg">
           <p className="p-0 text-4xl text-stone-700 font-semibold">LOGIN</p>
           <p className="p-0 text-sm -mt-3">WELCOME</p>
           <Image src={divider} />
