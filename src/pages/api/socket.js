@@ -31,6 +31,11 @@ const SocketHandler = async (req, res) => {
       socket.on("audio", (frame) => {
         socket.to(session.user.id).emit("audio", frame);
       });
+
+      socket.on("message", ({ message, id }) => {
+        console.log(message, id);
+        socket.to(id).emit("message", message);
+      });
     });
   }
   res.end();

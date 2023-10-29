@@ -179,7 +179,7 @@ const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
           })}
         </div>
       ) : (
-        <p className="p-0 m-0">awaiting voice input</p>
+        <p className="p-0 m-0">awaiting voice input...</p>
       )}
     </div>
   );

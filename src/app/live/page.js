@@ -59,6 +59,10 @@ const Live = () => {
 
     socket.emit("join", session.user.id);
 
+    socket.on("message", (message) => {
+      console.log("ADD API CALL HERE", message);
+    });
+
     const id = setInterval(() => {
       capture();
     }, 20);
