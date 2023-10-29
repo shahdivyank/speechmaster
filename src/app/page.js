@@ -13,7 +13,9 @@ const login = () => {
         </div>
 
         <div className="w-1/2 p-6 bg-sm-white flex flex-col items-center h-full justify-center rounded-r-lg">
-          <p className="p-0 text-4xl text-stone-700 font-semibold">LOGIN</p>
+          <p className="p-0 text-4xl text-stone-700 font-semibold mb-3">
+            LOGIN
+          </p>
           <p className="p-0 text-sm -mt-3">WELCOME</p>
           <Image src={divider} />
 
