@@ -1,4 +1,4 @@
-import { POSTURES } from "@/data/Posture";
+import { POSTURES, TEXT } from "@/data/Posture";
 const Postures = ({ postures }) => {
   return (
     <>
@@ -10,7 +10,7 @@ const Postures = ({ postures }) => {
             >
               {postures.filter((item) => item.type == key).length}
             </div>
-            {type}
+            {TEXT[type]}
           </div>
         );
       })}

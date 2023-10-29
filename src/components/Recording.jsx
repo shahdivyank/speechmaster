@@ -64,7 +64,7 @@ const Recording = ({
             </div>
           </div>
           <div className="flex items-center gap-4 justify-end">
-            <div className="w-1/4">
+            <div className="w-1/6">
               <CircularProgressbar
                 className="w-full"
                 counterClockwise={true}

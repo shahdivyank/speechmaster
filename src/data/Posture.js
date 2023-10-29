@@ -11,3 +11,10 @@ export const POSTURES2 = {
   3: "hip",
   4: "leg",
 };
+
+export const TEXT = {
+  face: "Avoiding Eye Contact",
+  shoulder: "Your Shoulders Are Not Straight",
+  hip: "Your Hips Are Not Straight",
+  leg: "Not Standing Straight",
+};
