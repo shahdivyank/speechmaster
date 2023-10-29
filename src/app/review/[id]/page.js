@@ -1,40 +1,62 @@
 "use client";
-import { BsPlayCircle, BsStopCircle, BsArrowRightShort } from "react-icons/bs";
-import { useState } from "react";
+import { BsArrowRightShort } from "react-icons/bs";
 import { breakdown } from "@/data/Breakdown";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "react-circular-progressbar/dist/styles.css";
+import VideoPlayer from "@/components/VideoPlayer";
+import { TAGS } from "@/data/mockTags";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const review = () => {
-  const [toggle, setToggle] = useState(false);
+const review = ({ params }) => {
   const value = 78;
+  const [title, setTitle] = useState("");
+  const [video, setVideo] = useState({});
+  console.log(video);
+  useEffect(() => {
+    axios.get(`/api/video?videoId=${params.id}`).then((res) => {
+      setVideo(res.data);
+      console.log(res.data);
+      setTitle(res.data.title);
+    });
+  }, []);
   return (
-    <div className="w-full flex justify-center bg-sm-beige">
-      <div className="w-8/12 flex flex-col min-h-screen">
+    <div className="w-full flex justify-center bg-sm-beige h-[90vh]">
+      <div className="w-8/12 flex flex-col">
         <div className="h-6 w-full flex my-3">
           <textarea
             className="px-2 resize-none rounded w-full"
             placeholder="title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
           />
-          <div className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs">
+          <div
+            className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs hover:cursor-pointer"
+            onClick={() => {
+              axios
+                .put("/api/video", {
+                  title: title,
+                  videoId: params.id,
+                  action: "update",
+                })
+                .then((res) => {
+                  toast("✅ successfully updated");
+                });
+            }}
+          >
             save
           </div>
         </div>
-        <div className="w-full h-96 rounded-lg bg-sm-grey flex items-end justify-center p-3">
-          {toggle ? (
-            <BsStopCircle
-              className="text-sm-red text-5xl cursor-pointer"
-              onClick={() => setToggle(false)}
-            />
-          ) : (
-            <BsPlayCircle
-              className="cursor-pointer text-5xl"
-              onClick={() => setToggle(true)}
-            />
-          )}
-        </div>
-        <div className=" h-4 rounded-full my-4 bg-gradient-to-r from-sm-orange via-sm-red to-sm-blue" />
+        <VideoPlayer
+          videoId={params.id}
+          timeLine={true}
+          controls={false}
+          tags={TAGS}
+        />
       </div>
 
       <div className="w-1/4 m-4 bg-sm-white p-3 rounded-xl">
@@ -57,7 +79,6 @@ const review = () => {
                   item.behavior === "comment" ? "bg-sm-blue" : "bg-sm-red"
                 } w-6 text-center rounded`}
               >
-                {" "}
                 {item.count}
               </div>
               {item.behavior}

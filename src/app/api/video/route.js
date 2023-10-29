@@ -1,6 +1,6 @@
 import cloudinary from "cloudinary";
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../../prismaClient";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -12,7 +12,6 @@ cloudinary.config({
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  const prisma = new PrismaClient();
   const res = NextResponse;
   const { file, title, categories } = await req.json();
   const video = await cloudinary.v2.uploader.upload(file, {
@@ -31,28 +30,38 @@ export async function POST(req) {
   return res.json(snapshot);
 }
 
-export async function GET() {
+export async function GET(req) {
   const res = NextResponse;
-  const session = await getServerSession(authOptions);
-  const prisma = new PrismaClient();
-  const response = await prisma.videos.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: [
-      {
-        created: "desc",
+  const videoId = req.nextUrl.searchParams.get("videoId");
+  console.log(videoId);
+  if (videoId) {
+    const response = await prisma.videos.findUnique({
+      where: {
+        identifier: videoId,
       },
-    ],
-  });
-  if (response) return res.json(response);
-  else return res.json(500);
+    });
+    if (response) return res.json(response);
+    else return res.json(500);
+  } else {
+    const session = await getServerSession(authOptions);
+    const response = await prisma.videos.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: [
+        {
+          created: "desc",
+        },
+      ],
+    });
+    if (response) return res.json(response);
+    else return res.json(500);
+  }
 }
 
 export async function PUT(req) {
   const res = NextResponse;
   const { title, videoId, action } = await req.json();
-  const prisma = new PrismaClient();
   if (action === "delete") {
     const snapShot = await prisma.videos.deleteMany({
       where: {
@@ -66,7 +75,7 @@ export async function PUT(req) {
   } else {
     const snapShot = await prisma.videos.update({
       where: {
-        videoId: videoId,
+        identifier: videoId,
       },
       data: {
         title: title,
