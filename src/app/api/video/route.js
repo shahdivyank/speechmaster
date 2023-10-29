@@ -28,7 +28,6 @@ export async function POST(req) {
       categories: categories.join(","),
     },
   });
-  console.log(snapshot);
   return res.json(snapshot);
 }
 

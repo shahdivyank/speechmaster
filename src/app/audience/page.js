@@ -1,20 +1,9 @@
 "use client";
-import { useEffect } from "react";
-import { socket } from "../../../socket";
 import { BsPlayCircle, BsStopCircle } from "react-icons/bs";
 import { useState } from "react";
 
 const Audience = () => {
   const [toggle, setToggle] = useState(false);
-
-  useEffect(() => socketInitializer(), []);
-
-  const socketInitializer = () => {
-    socket.connect();
-    socket.on("connect", () => {
-      console.log("connected");
-    });
-  };
 
   return (
     <div className="w-full flex justify-center">

@@ -3,23 +3,23 @@ import { useEffect, useState } from "react";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import AudioAnalysis from "./AudioAnalysis";
 
-const AudioPlayer = ({globalIsPlaying}) => {
+const AudioPlayer = ({ globalIsPlaying }) => {
   const {
-		startRecording,
-		stopRecording,
-		togglePauseResume,
-		recordingBlob,
-		isRecording,
-		isPaused,
-		recordingTime,
-		mediaRecorder,
-	} = useAudioRecorder(
-		{
-			noiseSuppression: true,
-			echoCancellation: true,
-		},
-		(err) => console.table(err) // onNotAllowedOrFound
-	);
+    startRecording,
+    stopRecording,
+    togglePauseResume,
+    recordingBlob,
+    isRecording,
+    isPaused,
+    recordingTime,
+    mediaRecorder,
+  } = useAudioRecorder(
+    {
+      noiseSuppression: true,
+      echoCancellation: true,
+    },
+    (err) => console.table(err), // onNotAllowedOrFound
+  );
   const [audios, setAudio] = useState([]);
   const [base64Audio, setBase64Audio] = useState();
   const [localIsRecording, setLocalIsRecording] = useState(false);
@@ -28,38 +28,31 @@ const AudioPlayer = ({globalIsPlaying}) => {
     if (!globalIsPlaying) {
       return;
     }
-    if (!localIsRecording)
-    {
-     startRecording();
-     setLocalIsRecording(true);
-     console.log("started recording audio");
+    if (!localIsRecording) {
+      startRecording();
+      setLocalIsRecording(true);
+      console.log("started recording audio");
     }
-     
-    if (recordingTime>3)
-    {
-      stopRecording()
+
+    if (recordingTime > 3) {
+      stopRecording();
       console.log("stopped recording audio");
     }
     if (recordingBlob) {
-			addAudioElement(recordingBlob);
-		}
-		
-   
-    
+      addAudioElement(recordingBlob);
+    }
+  }, [globalIsPlaying, recordingTime, recordingBlob]);
 
-	}, [globalIsPlaying,recordingTime,recordingBlob]);
-  
   // useEffect(() => {
   //   console.log("hello")
   //   startRecording();
 
-
   //   addAudioElement(recordingBlob)
-    
+
   // }, [recordingBlob])
   const handlePlayer = () => {
-    startRecording()
-  }
+    startRecording();
+  };
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob);
     setAudio([...audios, url]);

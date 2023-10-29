@@ -1,3 +1,4 @@
+import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
@@ -7,6 +8,7 @@ const ProtectedPage = ({ children }) => {
   useEffect(() => {
     if (status === "loading") return;
     if (status === "unauthenticated") void signIn("google");
+    else axios.post("/api/socket");
   }, [status]);
 
   return (

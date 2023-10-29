@@ -1,19 +1,44 @@
 "use client";
 import { BsPlayCircle, BsStopCircle } from "react-icons/bs";
 import Webcam from "react-webcam";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { socket } from "../../../socket";
 
 const live = () => {
+  const { data: session } = useSession();
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
-  // const [loading, setLoading] = useState(false);
+
+  const handleShare = () => {
+    const link = `http://localhost:3000/join/${session.user.id}`;
+    navigator.clipboard.writeText(link);
+    toast("✅ Link copied to clipboard");
+  };
+
+  const capture = useCallback(() => {
+    socket.emit("frames", webcamRef.current.getScreenshot());
+  }, [webcamRef]);
+
+  useEffect(() => {
+    socket.connect();
+
+    socket.emit("join", session.user.id);
+
+    const id = setInterval(() => {
+      capture();
+    }, 20);
+
+    return () => clearInterval(id);
+  }, []);
+
   const handleStartRecording = useCallback(() => {
     setRecording(true);
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
@@ -207,6 +232,7 @@ const live = () => {
               }}
             />
           )}
+          <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
             <div
               className="bg-sm-red text-lg font-semibold text-white px-3 py-2 rounded-sm hover:cursor-pointer"
