@@ -1,5 +1,5 @@
 "use client";
-import { BsPlayCircle, BsStopCircle } from "react-icons/bs";
+import { BsPlayCircle, BsStopCircle, BsShare } from "react-icons/bs";
 import Webcam from "react-webcam";
 import { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
@@ -311,7 +311,7 @@ const Live = () => {
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
 
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center justify-between w-11/12 p-3">
           {recording ? (
             <BsStopCircle
               className="text-sm-red text-5xl cursor-pointer"
@@ -329,7 +329,6 @@ const Live = () => {
               }}
             />
           )}
-          <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
             <button
               className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
@@ -338,13 +337,17 @@ const Live = () => {
               Upload
             </button>
           )}
+          {loading && (
+            <div className="flex items-center gap-2">
+              Generating the report...
+              <AiOutlineLoading3Quarters className="text-sm-red animate-spin" />
+            </div>
+          )}
+          <button className="flex flex-col items-center" onClick={handleShare}>
+            <BsShare />
+            Share
+          </button>
         </div>
-        {loading && (
-          <div className="flex items-center gap-2">
-            Uploading...
-            <AiOutlineLoading3Quarters className="text-sm-red animate-spin" />
-          </div>
-        )}
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
         <p className="font-bold text-xl p-0">emotional tone</p>
