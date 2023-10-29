@@ -141,7 +141,7 @@ const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
   };
   return (
     <div>
-      {currentEmotions && (
+      {currentEmotions.length != 0 ? (
         <div>
           {currentEmotions.map((emotion, index) => {
             const arrayIndex = Object.keys(topEmotions).indexOf(emotion);
@@ -161,6 +161,8 @@ const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
               );
           })}
         </div>
+      ) : (
+        <p className="p-0 m-0">awaiting voice input</p>
       )}
     </div>
   );
