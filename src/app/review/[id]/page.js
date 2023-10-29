@@ -1,13 +1,12 @@
 "use client";
-import { BsPlayCircle, BsStopCircle, BsArrowRightShort } from "react-icons/bs";
-import { useState } from "react";
+import { BsArrowRightShort } from "react-icons/bs";
 import { breakdown } from "@/data/Breakdown";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "react-circular-progressbar/dist/styles.css";
+import VideoPlayer from "@/components/VideoPlayer";
 
-const review = () => {
-  const [toggle, setToggle] = useState(false);
+const review = ({ params }) => {
   const value = 78;
   return (
     <div className="w-full flex justify-center bg-sm-beige">
@@ -21,20 +20,7 @@ const review = () => {
             save
           </div>
         </div>
-        <div className="w-full h-96 rounded-lg bg-sm-grey flex items-end justify-center p-3">
-          {toggle ? (
-            <BsStopCircle
-              className="text-sm-red text-5xl cursor-pointer"
-              onClick={() => setToggle(false)}
-            />
-          ) : (
-            <BsPlayCircle
-              className="cursor-pointer text-5xl"
-              onClick={() => setToggle(true)}
-            />
-          )}
-        </div>
-        <div className=" h-4 rounded-full my-4 bg-gradient-to-r from-sm-orange via-sm-red to-sm-blue" />
+        <VideoPlayer videoId={params.id} timeLine={true} controls={false} />
       </div>
 
       <div className="w-1/4 m-4 bg-sm-white p-3 rounded-xl">
@@ -57,7 +43,6 @@ const review = () => {
                   item.behavior === "comment" ? "bg-sm-blue" : "bg-sm-red"
                 } w-6 text-center rounded`}
               >
-                {" "}
                 {item.count}
               </div>
               {item.behavior}

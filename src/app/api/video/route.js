@@ -1,6 +1,6 @@
 import cloudinary from "cloudinary";
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../../prismaClient";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -12,7 +12,6 @@ cloudinary.config({
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  const prisma = new PrismaClient();
   const res = NextResponse;
   const { file, title, categories } = await req.json();
   const video = await cloudinary.v2.uploader.upload(file, {
@@ -35,7 +34,6 @@ export async function POST(req) {
 export async function GET() {
   const res = NextResponse;
   const session = await getServerSession(authOptions);
-  const prisma = new PrismaClient();
   const response = await prisma.videos.findMany({
     where: {
       userId: session.user.id,
@@ -53,7 +51,6 @@ export async function GET() {
 export async function PUT(req) {
   const res = NextResponse;
   const { title, videoId, action } = await req.json();
-  const prisma = new PrismaClient();
   if (action === "delete") {
     const snapShot = await prisma.videos.deleteMany({
       where: {

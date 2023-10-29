@@ -55,7 +55,7 @@ const live = () => {
             file: base64data,
             title: title,
             // TODO: add actrual categories
-            categories: ["test", "menthy"],
+            categories: ["Workshops", "Others"],
           })
           .then((res) => {
             console.log(res);
