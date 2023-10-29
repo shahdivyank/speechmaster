@@ -13,6 +13,11 @@ const Page = ({ params }) => {
     socket.on("frames", (image) => {
       setFrame(image);
     });
+
+    socket.on("audio", (audio) => {
+      const voice = new Audio(audio);
+      voice.play();
+    });
   }, []);
 
   return (

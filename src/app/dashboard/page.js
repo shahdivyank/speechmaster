@@ -36,30 +36,34 @@ const home = () => {
         {recordings.length === 0 && (
           <div className="w-full flex justify-center">No video to display</div>
         )}
-        {recordings
-          .filter((r) => !r.hidden)
-          .map((recording, index) => (
-            <Recording
-              key={index}
-              id={recording.identifier}
-              recordings={recordings}
-              setRecordings={setRecordings}
-              image={recording.image}
-              title={recording.title}
-              created={recording.created}
-              modified={recording.modified}
-              share={recording.share}
-              selected={recording.selected}
-              categories={recording.categories}
-              format={`${index % 2 === 0 ? "bg-sm-lightgrey" : "bg-sm-white"} ${
-                index === 0
-                  ? "rounded-t-lg"
-                  : index === recordings.length - 1
-                  ? "rounded-b-lg"
-                  : "rounded-none"
-              }`}
-            />
-          ))}
+        <div className=" h-[90vh] overflow-scroll">
+          {recordings
+            .filter((r) => !r.hidden)
+            .map((recording, index) => (
+              <Recording
+                key={index}
+                id={recording.identifier}
+                recordings={recordings}
+                setRecordings={setRecordings}
+                image={recording.image}
+                title={recording.title}
+                created={recording.created}
+                modified={recording.modified}
+                share={recording.share}
+                selected={recording.selected}
+                categories={recording.categories}
+                format={`${
+                  index % 2 === 0 ? "bg-sm-lightgrey/40" : "bg-sm-white/40"
+                } ${
+                  index === 0
+                    ? "rounded-t-lg"
+                    : index === recordings.length - 1
+                    ? "rounded-b-lg"
+                    : "rounded-none"
+                }`}
+              />
+            ))}
+        </div>
       </div>
     </div>
   );

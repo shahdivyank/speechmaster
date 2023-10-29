@@ -8,17 +8,28 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
 import AudioPlayer from "@/components/AudioPlayer";
-import Link from "next/link";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
+import Checkbox from "@/components/Checkbox";
+import { useRouter } from "next/navigation";
+import { useInterval } from "@/components/useInterval";
 
-const live = () => {
+const Live = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
+  const [notifs, setNotifs] = useState([]);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
+  const [base64Audio, setBase64Audio] = useState();
+  const [tags, setTags] = useState({
+    Workshops: false,
+    "Class Presentations": false,
+    Other: false,
+  });
+  const [body, setBody] = useState("upper");
   const [DBEmotions, setDBEmotions] = useState([]);
 
   const handleShare = () => {
@@ -39,7 +50,7 @@ const live = () => {
     };
 
     loadup();
-    load();
+    // load();
 
     socket.connect();
 
@@ -87,55 +98,59 @@ const live = () => {
       reader.readAsDataURL(blob);
       reader.onloadend = function () {
         const base64data = reader.result;
-        console.log(base64data);
+
         axios
-          .post(`api/video`, {
+          .post(`/api/video`, {
             file: base64data,
             title: title,
-            // TODO: add actrual categories
-            categories: ["test", "menthy"],
+            categories: Object.keys(tags).filter((tag) => tags[tag]),
           })
           .then((res) => {
-            console.log(res);
             toast("✅ Video Uploaded Successfully");
           })
           .catch((err) => {
-            console.log(err);
             toast("❌ Internal Server Error");
           });
       };
 
       setRecordedVideo([]);
+      router.push("/dashboard");
     }
   }, [recordedVideo]);
 
-  const load = async () => {
+  // const load = async () => {
+  //   const detector = await poseDetection.createDetector(
+  //     poseDetection.SupportedModels.MoveNet,
+  //     { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
+  //   );
+  // };
+
+  useInterval(async () => {
     const detector = await poseDetection.createDetector(
       poseDetection.SupportedModels.MoveNet,
       { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING },
     );
-
-    setInterval(() => {
-      detect(detector);
-    }, 200);
-  };
+    detect(detector);
+  }, 3000);
 
   const detect = async (detector) => {
+    console.log(notifs);
     if (detector && webcamRef) {
       if (webcamRef.current.video) {
         const poses = await detector.estimatePoses(webcamRef.current.video);
         if (poses[0]) {
           checkHeadTilt(poses[0].keypoints);
           checkShoulderTilt(poses[0].keypoints);
-          checkHipTilt(poses[0].keypoints);
-          checkLegTitle(poses[0].keypoints);
+          console.log(body);
+          body !== "upper" && checkHipTilt(poses[0].keypoints);
+          body !== "upper" && checkLegTitle(poses[0].keypoints);
         }
       }
     }
     requestAnimationFrame(detect);
   };
 
-  const checkHeadTilt = (poses) => {
+  const checkHeadTilt = async (poses) => {
     const leftEye = poses[1];
     const leftEar = poses[3];
 
@@ -143,11 +158,19 @@ const live = () => {
     const rightEar = poses[4];
 
     if (leftEar.y < leftEye.y || rightEar.y < rightEye.y) {
+      setNotifs((prev) => [
+        ...prev,
+        {
+          timestamp: new Date(),
+          type: "face",
+          message: "Make sure to look towards the audience!",
+        },
+      ]);
       console.log("LOOKING DOWN");
     }
   };
 
-  const checkShoulderTilt = (poses) => {
+  const checkShoulderTilt = async (poses) => {
     const leftShoulder = poses[5];
     const rightShoulder = poses[6];
 
@@ -159,11 +182,19 @@ const live = () => {
       rightShoulder.y + margin < leftShoulder.y ||
       rightShoulder.y - margin > leftShoulder.y
     ) {
+      setNotifs([
+        ...notifs,
+        {
+          timestamp: new Date(),
+          type: "shoulder",
+          message: "Attempt to stand straight!",
+        },
+      ]);
       console.log("shoulders misaligned");
     }
   };
 
-  const checkHipTilt = (poses) => {
+  const checkHipTilt = async (poses) => {
     const leftHip = poses[11];
     const rightHip = poses[12];
 
@@ -175,11 +206,19 @@ const live = () => {
       rightHip.y + margin < leftHip.y ||
       rightHip.y - margin > leftHip.y
     ) {
+      setNotifs([
+        ...notifs,
+        {
+          timestamp: new Date(),
+          type: "hip",
+          message: "Attempt to stand straight!",
+        },
+      ]);
       console.log("shoulders misaligned");
     }
   };
 
-  const checkLegTitle = (poses) => {
+  const checkLegTitle = async (poses) => {
     const leftHip = poses[11];
     const rightHip = poses[12];
 
@@ -191,40 +230,69 @@ const live = () => {
 
     const margin = 25;
 
-    console.log(leftHip.x, leftKnee.x, leftAnkle.x);
-
     if (
       leftHip.x + margin < leftKnee.x ||
       leftHip.x - margin > leftKnee.x ||
       leftHip.x + margin < leftAnkle.x ||
-      leftHip.x - margin > leftAnkle.x
-    ) {
-      console.log("LEFT LEG IN CHECK");
-    }
-
-    if (
+      leftHip.x - margin > leftAnkle.x ||
       rightHip.x + margin < rightKnee.x ||
       rightHip.x - margin > rightKnee.x ||
       rightHip.x + margin < rightAnkle.x ||
       rightHip.x - margin > rightAnkle.x
     ) {
-      console.log("RIGHT LEG IN CHECK");
+      setNotifs([
+        ...notifs,
+        {
+          timestamp: new Date(),
+          type: "hip",
+          message: "Avoid moving your legs too much!",
+        },
+      ]);
+      console.log("KEEP LEG IN CHECK");
     }
   };
   return (
     <div className="w-full h-[90vh] flex justify-center">
       <div className="w-8/12 flex flex-col h-full justify-between items-center">
-        <div className="h-6 w-full flex my-3">
-          <textarea
-            className="px-2 resize-none rounded w-full"
+        <div className="w-full flex flex-col my-3">
+          <input
+            className="px-2 py-1 outline-none resize-none rounded w-full"
             placeholder="title"
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
             }}
           />
+
+          <div className="flex">
+            {["Workshops", "Class Presentations", "Other"].map((tag, index) => (
+              <div className="flex items-center mx-2" key={index}>
+                <Checkbox
+                  state={tags[tag]}
+                  onClick={() => setTags({ ...tags, [tag]: !tags[tag] })}
+                />
+                <div>{tag}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex">
+            {[
+              { name: "Upper Body Only", value: "upper" },
+              { name: "Whole Body", value: "whole" },
+            ].map((tag, index) => (
+              <div className="flex items-center mx-2" key={index}>
+                <Checkbox
+                  state={body === tag.value}
+                  onClick={() => setBody(tag.value)}
+                />
+                <div>{tag.name}</div>
+              </div>
+            ))}
+          </div>
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
+        
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -246,20 +314,24 @@ const live = () => {
           )}
           <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
-            <Link
+            <button
               className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
-              href="/dashboard"
             >
               Upload
-            </Link>
+            </button>
           )}
         </div>
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
         <p className="font-bold text-xl p-0">emotional tone</p>
         <AudioPlayer
+          
           globalIsPlaying={recording}
+          setBase64Audio={setBase64Audio}
+          base64Audio={base64Audio}
+          socket={socket}
+        
           setDBEmotions={setDBEmotions}
         />
       </div>
@@ -267,4 +339,4 @@ const live = () => {
   );
 };
 
-export default live;
+export default Live;

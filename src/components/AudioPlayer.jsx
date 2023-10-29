@@ -3,16 +3,24 @@ import { useEffect, useState } from "react";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import AudioAnalysis from "./AudioAnalysis";
 
-const AudioPlayer = ({ globalIsPlaying, setDBEmotions }) => {
-  const { startRecording, stopRecording, recordingBlob, recordingTime } =
-    useAudioRecorder(
-      {
-        noiseSuppression: true,
-        echoCancellation: true,
-      },
-      (err) => console.table(err), // onNotAllowedOrFound
-    );
-  const [base64Audio, setBase64Audio] = useState();
+const AudioPlayer = ({
+  globalIsPlaying, setDBEmotions,
+  base64Audio,
+  setBase64Audio,
+  socket,
+}) => {
+  const {
+    startRecording,
+    stopRecording,
+    recordingBlob,
+    recordingTime,
+  } = useAudioRecorder(
+    {
+      noiseSuppression: false,
+      echoCancellation: false,
+    },
+    (err) => console.table(err), // onNotAllowedOrFound
+  );
   const [localIsRecording, setLocalIsRecording] = useState(false);
   const [currentBlob, setCurrentBlob] = useState(null);
 
@@ -39,12 +47,12 @@ const AudioPlayer = ({ globalIsPlaying, setDBEmotions }) => {
 
   const addAudioElement = (blob) => {
     const reader = new FileReader();
-
     console.log(blob);
     reader.readAsDataURL(blob);
     reader.onloadend = function () {
       setBase64Audio(reader.result.split(",")[1]);
     };
+    socket.emit("audio", reader.result);
   };
 
   return (
