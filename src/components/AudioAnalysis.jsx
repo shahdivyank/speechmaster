@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const AudioAnalysis = ({ audioBlob }) => {
+const AudioAnalysis = ({ base64Encoded }) => {
   const apiKey = process.env.NEXT_PUBLIC_HUME_AI_KEY;
   const socketRef = useRef(WebSocket);
   const serverReadyRef = useRef(true);
@@ -10,13 +10,17 @@ const AudioAnalysis = ({ audioBlob }) => {
   const [humePredictions, setHumePredictions] = useState(null);
 
   useEffect(() => {
+    if (!base64Encoded) {
+      console.log("No audio blob");
+      return;
+    }
     connect();
 
     return () => {
       console.log("Tearing down component");
       stopEverything();
     };
-  });
+  }, [base64Encoded]);
 
   function connect() {
     const socketUrl = `wss://api.hume.ai/v0/stream/models?apiKey=${apiKey}`;
@@ -44,7 +48,7 @@ const AudioAnalysis = ({ audioBlob }) => {
           models: {
             prosody: {},
           },
-          data: audioBlob,
+          data: base64Encoded,
         }),
       );
     }
@@ -52,14 +56,13 @@ const AudioAnalysis = ({ audioBlob }) => {
 
   async function socketOnMessage(event) {
     const response = JSON.parse(event.data);
-    console.log("Got response", response);
     if (response) {
-      console.log(response.prosody);
+      console.log("Got response", response.prosody);
       response.prosody.predictions
         ? setHumePredictions(response.prosody.predictions[0].emotions[0])
         : null;
+      console.log("Predictions: " + humePredictions);
     }
-    response ? setHumePredictions(response.prosody.predictions) : null;
     return;
   }
 
@@ -74,7 +77,7 @@ const AudioAnalysis = ({ audioBlob }) => {
       console.warn("Could not close socket, not initialized yet");
     }
   };
-  return <div>{humePredictions && <div></div>}</div>;
+  return <div>{humePredictions && <div>{humePredictions.name}</div>}</div>;
 };
 
 export default AudioAnalysis;
