@@ -33,6 +33,9 @@ const home = () => {
       />
       <div className="p-3 w-3/4 bg-sm-beige">
         <ToolBar recordings={recordings} setRecordings={setRecordings} />
+        {recordings.length === 0 && (
+          <div className="w-full flex justify-center">No video to display</div>
+        )}
         {recordings
           .filter((r) => !r.hidden)
           .map((recording, index) => (
