@@ -324,7 +324,7 @@ const Live = () => {
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
         <p className="font-bold text-xl p-0">emotional tone</p>
-        <div className="bg-sm-lightgrey pb-2 px-2 h-20 pt-1 rounded-lg font-semibold">
+        <div className="bg-sm-lightgrey pb-2 px-2 h-20 pt-1 rounded-lg">
           <AudioPlayer
             globalIsPlaying={recording}
             setBase64Audio={setBase64Audio}
