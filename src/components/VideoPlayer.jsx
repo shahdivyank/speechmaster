@@ -59,14 +59,16 @@ const VideoPlayer = ({ videoId, controls, timeLine }) => {
         {timeLine &&
           videoRef.current &&
           tags.map((tag, index) => {
-            const pos = `left-[${parseInt(
+            const pos = `${parseInt(
               (tag.time / videoRef.current.duration) * 100,
-            )}%]`;
-            const classs = `${pos} ${tag.color} absolute `;
+            )}`;
             return (
               <div
-                style="background-color: red; position: absolute; top: 100px; left: 0;"
-                // className={classs}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: `${pos}` + "%",
+                }}
                 key={index}
                 onClick={() => {
                   setValue(tag.time);
