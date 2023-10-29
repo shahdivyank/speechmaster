@@ -74,3 +74,23 @@ model Videos {
   @@id([identifier])
   @@map("videos")
 }
+
+
+model Posture {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoId     String
+  timeStamp   DateTime
+  message     String
+  type        Int
+
+  @@map("posture")
+}
+
+model Hume {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoId     String
+  timeStamp   DateTime
+  emotion     Int
+
+  @@map("hume")
+}
