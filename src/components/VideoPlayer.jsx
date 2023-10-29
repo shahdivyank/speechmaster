@@ -15,6 +15,7 @@ const VideoPlayer = ({ videoId, controls, timeLine, tags }) => {
   const [value, setValue] = useState(0);
   const videoRef = useRef(null);
   const myVideo = cld.video(videoId);
+  console.log(myVideo);
   useEffect(() => {
     videoRef.current.currentTime = 1000000;
   }, []);

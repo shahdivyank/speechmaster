@@ -38,7 +38,7 @@ const Recording = ({
       <div className="w-full">
         <div className="flex justify-between w-full">
           <div className="ml-2">
-            <p className="m-0">{title}</p>
+            <p className="m-0">{title ? title : "no title"}</p>
             {share && (
               <div className="flex">
                 <p className="m-0 pr-2 text-sm-grey">audience</p>
@@ -57,9 +57,6 @@ const Recording = ({
           <div>
             <div className="h-full flex flex-col justify-center items-end">
               <p className=" text-xs m-0 text-sm-grey">created: {created}</p>
-              <p className="text-xs m-0 text-sm-grey">
-                last modified: {modified}
-              </p>
               <Link
                 href={`/review/${id}`}
                 className="hover:opacity-50 transition-transform ease-in-out flex items-center text-xs text-sm-red font-semibold no-underline"
