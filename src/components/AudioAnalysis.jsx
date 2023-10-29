@@ -89,36 +89,32 @@ const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
                 emotion.score >= 0.1
               ) {
                 newTopEmotions[emotion.name] += 1;
-                if (
-                  topEmotions[emotion.name] % 2 === 0 &&
-                  topEmotions[emotion.name] !== 0
-                ) {
-                  setDBEmotions((prevDBEmotions) => {
-                    const newEmotionEntry = {
-                      timestamp: new Date(),
-                      emotion: Emotions[emotion.name],
-                    };
 
-                    const updatedDBEmotions = [
-                      ...prevDBEmotions,
-                      newEmotionEntry,
-                    ];
+                setDBEmotions((prevDBEmotions) => {
+                  const newEmotionEntry = {
+                    timestamp: new Date(),
+                    emotionName: emotion.name,
+                  };
 
-                    return updatedDBEmotions;
-                  });
-                  setCurrentEmotions((prev) => {
-                    if (!prev.includes(emotion.name)) {
-                      const newCurrentEmotions = [...prev, emotion.name];
+                  const updatedDBEmotions = [
+                    ...prevDBEmotions,
+                    newEmotionEntry,
+                  ];
 
-                      if (newCurrentEmotions.length > 3) {
-                        newCurrentEmotions.shift();
-                      }
+                  return updatedDBEmotions;
+                });
+                setCurrentEmotions((prev) => {
+                  if (!prev.includes(emotion.name)) {
+                    const newCurrentEmotions = [...prev, emotion.name];
 
-                      return newCurrentEmotions;
+                    if (newCurrentEmotions.length > 3) {
+                      newCurrentEmotions.shift();
                     }
-                    return prev;
-                  });
-                }
+
+                    return newCurrentEmotions;
+                  }
+                  return prev;
+                });
               }
             });
             return newTopEmotions;
@@ -146,7 +142,7 @@ const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
   return (
     <div>
       {currentEmotions && (
-        <div className="bg-sm-lightgrey p-1 rounded-lg font-semibold">
+        <div>
           {currentEmotions.map((emotion, index) => {
             const arrayIndex = Object.keys(topEmotions).indexOf(emotion);
             if (arrayIndex < 5) {
