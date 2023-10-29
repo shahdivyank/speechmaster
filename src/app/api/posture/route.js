@@ -1,19 +1,20 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../../prismaClient";
+import { POSTURES } from "@/data/Posture";
 
 export async function POST(req) {
   const res = NextResponse;
-  const { timeStamp, message, type, videoId } = await req.json();
-
-  const snapshot = await prisma.posture.create({
-    data: {
-      videoId: videoId,
-      timeStamp: timeStamp,
-      message: message,
-      emotion: type.join(","),
-    },
+  const { postures, videoId } = await req.json();
+  postures.forEach(async (posture) => {
+    await prisma.posture.create({
+      data: {
+        ...posture,
+        videoId: videoId,
+        type: POSTURES[posture.type],
+      },
+    });
   });
-  return res.json(snapshot);
+  return res.json(200);
 }
 
 export async function GET(req) {
@@ -25,7 +26,7 @@ export async function GET(req) {
     },
     orderBy: [
       {
-        timeStamp: "desc",
+        timestamp: "desc",
       },
     ],
   });

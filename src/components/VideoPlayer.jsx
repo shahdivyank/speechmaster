@@ -5,7 +5,14 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { BiSolidMap } from "react-icons/bi";
 
-const VideoPlayer = ({ videoId, controls, timeLine, tags }) => {
+const VideoPlayer = ({
+  videoCreated,
+  videoId,
+  controls,
+  timeLine,
+  tags,
+  setSelectedTag,
+}) => {
   const [toggle, setToggle] = useState(false);
   const cld = new Cloudinary({
     cloud: {
@@ -15,7 +22,7 @@ const VideoPlayer = ({ videoId, controls, timeLine, tags }) => {
   const [value, setValue] = useState(0);
   const videoRef = useRef(null);
   const myVideo = cld.video(videoId);
-  console.log(myVideo);
+  // console.log(myVideo);
   useEffect(() => {
     videoRef.current.currentTime = 1000000;
   }, []);
@@ -71,6 +78,7 @@ const VideoPlayer = ({ videoId, controls, timeLine, tags }) => {
                 }}
                 key={index}
                 onClick={() => {
+                  setSelectedTag(tag);
                   setValue(tag.time);
                   videoRef.current.currentTime = tag.time;
                 }}

@@ -79,7 +79,7 @@ model Videos {
 model Posture {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   videoId     String
-  timeStamp   DateTime
+  timestamp   DateTime
   message     String
   type        Int
 
@@ -90,7 +90,7 @@ model Hume {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   videoId     String
   timeStamp   DateTime
-  emotion     Int
+  emotion     String
 
   @@map("hume")
 }
