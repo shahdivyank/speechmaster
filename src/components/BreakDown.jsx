@@ -2,7 +2,8 @@ import { BsArrowLeftShort } from "react-icons/bs";
 import { POSTURES, POSTURES2 } from "@/data/Posture";
 import { EMOTIONS_NEG, EMOTIONS_POS } from "@/data/Emotions";
 
-const BreakDown = ({ setBreakdownView, postures, humes }) => {
+const BreakDown = ({ setBreakdownView, postures, humes, messages }) => {
+  console.log(messages);
   return (
     <div className="flex flex-col w-full overflow-y-scroll">
       <p
@@ -88,6 +89,17 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
           </div>
         );
       })}
+      <div className="self-start font-bold text-lg flex items-center justify-between ease-in-out">
+        Messages
+      </div>
+      {messages.map((item, index) => (
+        <div key={index} className="flex items-start ml-4">
+          <div className="mr-2 text-sm-blue my-1 bg-sm-blue/20 text-center rounded h-fit px-2 text-sm">
+            {item.timestamp}
+          </div>
+          <div>{item.message}</div>
+        </div>
+      ))}
     </div>
   );
 };

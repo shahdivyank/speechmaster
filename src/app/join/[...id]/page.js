@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { socket } from "../../../../socket";
 import { BiSolidSend } from "react-icons/bi";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 const Page = ({ params }) => {
   const [frame, setFrame] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-
+  const { data: session } = useSession();
   useEffect(() => {
     socket.connect();
     socket.emit("join", params.id[0]);
@@ -34,7 +35,11 @@ const Page = ({ params }) => {
       return;
     }
 
-    socket.emit("message", { message, id: params.id[0] });
+    socket.emit("message", {
+      message,
+      id: params.id[0],
+      img: session.user.image,
+    });
 
     setMessages([...messages, { message, timestamp: new Date() }]);
     setMessage("");

@@ -16,7 +16,7 @@ const Details = ({ data }) => {
           </div>
           <div>{data.message}</div>
         </div>
-      ) : (
+      ) : data.check === "humes" ? (
         <div>
           <div className="flex items-center">
             <div
@@ -29,6 +29,17 @@ const Details = ({ data }) => {
               {data.timestamp}
             </div>
             <div className="font-semibold">{data.emotionName}</div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="flex items-center">
+            <div
+              className={`mr-2 font-bold text-center rounded h-fit px-2 text-sm-blue my-1 bg-sm-blue/20`}
+            >
+              {data.timestamp}
+            </div>
+            <div className="font-semibold">{data.message}</div>
           </div>
         </div>
       )}

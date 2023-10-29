@@ -13,6 +13,7 @@ const VideoPlayer = ({
   humes,
   postures,
   setSelectedTag,
+  messages,
 }) => {
   const [toggle, setToggle] = useState(false);
   const cld = new Cloudinary({
@@ -116,6 +117,34 @@ const VideoPlayer = ({
                       ? "text-sm-orange"
                       : "text-sm-blue"
                   }`}
+                  size={30}
+                />
+              </div>
+            );
+          })}
+        {timeLine &&
+          videoRef.current &&
+          messages.map((hume, index) => {
+            const pos = `${parseInt(
+              (hume.timestamp / videoRef.current.duration) * 100,
+            )}`;
+            return (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: `${pos}` + "%",
+                }}
+                key={index}
+                onClick={() => {
+                  setSelectedTag(hume);
+                  setValue(hume.timestamp);
+                  videoRef.current.currentTime = hume.timestamp;
+                }}
+              >
+                <BiSolidMap
+                  className={`hover:cursor-pointer text-sm-blue
+              `}
                   size={30}
                 />
               </div>
