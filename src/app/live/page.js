@@ -27,6 +27,7 @@ const live = () => {
     "Class Presentations": false,
     Other: false,
   });
+  const [body, setBody] = useState("upper");
 
   const handleShare = () => {
     const link = `http://localhost:3000/join/${session.user.id}`;
@@ -238,6 +239,22 @@ const live = () => {
                   onClick={() => setTags({ ...tags, [tag]: !tags[tag] })}
                 />
                 <div>{tag}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex">
+            {[
+              { name: "Upper Body Only", value: "upper" },
+              { name: "Whole Body", value: "whole" },
+            ].map((tag, index) => (
+              <div className="flex items-center mx-2" key={index}>
+                <Checkbox
+                  state={body === tag.value}
+                  onClick={() => setBody(tag.value)}
+                />
+                {console.log(body)}
+                <div>{tag.name}</div>
               </div>
             ))}
           </div>
