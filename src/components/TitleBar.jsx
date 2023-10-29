@@ -1,31 +1,38 @@
 "use client";
 import React from "react";
+import Image from "next/image";
+import logo from "../../public/logo.svg";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
-import {
-  BsCheckSquare,
-  BsSortAlphaDown,
-  BsSortNumericDownAlt,
-} from "react-icons/bs";
-
-const format = "mx-1 active:opacity-70 hover:text-sm-orange cursor-pointer";
-const TitleBar = () => {
+const NavBar = () => {
+  const { data: session } = useSession();
   return (
-    <div className="flex justify-between text-black font-poppins items-end pb-3 ease-in-out transition-transform">
-      <p className="font-bold text-xl m-0 p-0">All Speeches</p>
-      <div className="text-xl flex items-center">
-        <BsCheckSquare className={`${format}`} />
-        <BsSortAlphaDown className={`${format} text-xl`} />
-        <BsSortNumericDownAlt className={`${format} text-xl`} />
-        <Link
-          href="/live"
-          className=" hover:scale-110 active:opacity-70 ml-2 no-underline text-white bg-sm-blue ease-in-out transition-transform text-lg font-semibold rounded-full h-fit px-3.5 pb-0.5 text-center"
-        >
-          + new
-        </Link>
+    <div className="bg-sm-white justify-between flex px-3 py-2">
+      <Link
+        href="/"
+        className="scale-95 hover:opacity-80 active:opacity-60 transition-transform"
+      >
+        <Image src={logo} />
+      </Link>
+      <div className="flex items-center">
+        <div>
+          <Image
+            height="40"
+            width="40"
+            className=" aspect-square rounded-full mr-2"
+            src={session.user.image}
+            alt="profile photo"
+          />
+        </div>
+
+        <div>
+          <p className="m-0 text-lg font-extrabold">{session.user.name}</p>
+          <p className="-mt-1 mb-0">{session.user.email}</p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default TitleBar;
+export default NavBar;

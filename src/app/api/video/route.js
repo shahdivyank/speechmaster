@@ -28,8 +28,8 @@ export async function POST(req) {
       categories: categories.join(","),
     },
   });
-  if (snapshot) res.json(snapshot);
-  else res.json(500);
+  console.log(snapshot);
+  return res.json(snapshot);
 }
 
 export async function GET() {
@@ -55,9 +55,9 @@ export async function PUT(req) {
   const { title, videoId, action } = await req.json();
   const prisma = new PrismaClient();
   if (action === "delete") {
-    const snapShot = await prisma.user.deleteMany({
+    const snapShot = await prisma.videos.deleteMany({
       where: {
-        videoId: {
+        identifier: {
           in: videoId,
         },
       },
