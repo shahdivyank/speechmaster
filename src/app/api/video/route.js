@@ -39,33 +39,36 @@ export async function POST(req) {
       categories: categories.join(","),
     },
   });
+  if (postures.length > 0)
+    await prisma.posture.createMany({
+      data: postures.map((posture) => {
+        return {
+          ...posture,
+          videoId: video.public_id,
+          type: POSTURES[posture.type],
+        };
+      }),
+    });
+  if (humes.length > 0)
+    await prisma.hume.createMany({
+      data: humes.map((hume) => {
+        return {
+          ...hume,
+          videoId: video.public_id,
+        };
+      }),
+    });
+  if (messages.length > 0)
+    await prisma.messages.createMany({
+      data: messages.map((message) => {
+        return {
+          ...message,
+          userImg: "img",
+          videoId: video.public_id,
+        };
+      }),
+    });
 
-  postures.forEach(async (posture) => {
-    await prisma.posture.create({
-      data: {
-        ...posture,
-        videoId: video.public_id,
-        type: POSTURES[posture.type],
-      },
-    });
-  });
-  humes.forEach(async (hume) => {
-    await prisma.hume.create({
-      data: {
-        ...hume,
-        videoId: video.public_id,
-      },
-    });
-  });
-  messages.forEach(async (message) => {
-    await prisma.messages.create({
-      data: {
-        ...message,
-        userImg: "img",
-        videoId: video.public_id,
-      },
-    });
-  });
   return res.json(200);
 }
 
