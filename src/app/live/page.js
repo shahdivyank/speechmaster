@@ -244,7 +244,7 @@ const Live = () => {
         ...notifs,
         {
           timestamp: new Date(),
-          type: "hip",
+          type: "leg",
           message: "Avoid extra leg movement!",
         },
       ]);
