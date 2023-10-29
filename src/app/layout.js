@@ -4,6 +4,8 @@ import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Poppins } from "next/font/google";
+import { useEffect } from "react";
+import axios from "axios";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -13,6 +15,10 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({ children, session }) {
+  useEffect(() => {
+    axios.post("/api/socket");
+  }, []);
+
   return (
     <html lang="en" className={`${poppins.variable}`}>
       <SessionProvider
