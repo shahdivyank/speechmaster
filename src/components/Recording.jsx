@@ -38,7 +38,7 @@ const Recording = ({
       <div className="w-full">
         <div className="flex justify-between w-full">
           <div className="ml-2">
-            <p className="m-0">{title}</p>
+            <p className="m-0">{title ? title : "no title"}</p>
             {share && (
               <div className="flex">
                 <p className="m-0 pr-2 text-sm-grey">audience</p>
