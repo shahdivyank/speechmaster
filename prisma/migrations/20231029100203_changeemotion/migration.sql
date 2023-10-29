@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "hume" ALTER COLUMN "emotion" SET DATA TYPE STRING;
