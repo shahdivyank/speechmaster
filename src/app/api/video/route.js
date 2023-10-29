@@ -19,7 +19,6 @@ export async function POST(req) {
     await req.json();
   const video = await cloudinary.v2.uploader.upload(file, {
     resource_type: "video",
-    raw_convert: "google_speech",
   });
   const score = Math.abs(
     100 -

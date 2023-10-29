@@ -21,9 +21,9 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
         return (
           count > 0 && (
             <>
-              <div className="flex items-center gap-1 self-start">
+              <div className="flex items-center gap-1 self-start font-bold">
                 <div
-                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-red w-8 text-center rounded`}
+                  className={`mr-2 text-sm-white my-1 aspect-square bg-sm-red w-8 justify-center flex text-center rounded`}
                 >
                   {count}
                 </div>
@@ -34,7 +34,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
                   return posture.type == key;
                 })
                 .map((item, index) => (
-                  <div key={index}>
+                  <div key={index} className="flex items-start ml-4">
                     <div className="flex items-center">
                       <div className="mr-2 text-sm-red my-1 bg-sm-red/20 text-center rounded h-fit px-2 text-sm">
                         {item.timestamp}
@@ -61,7 +61,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
         return (
           <div className="flex items-center self-start" key={index}>
             <div
-              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-8 text-center rounded`}
+              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-8 justify-center flex text-center rounded`}
             >
               {count}
             </div>
@@ -80,7 +80,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
         return (
           <div className="flex items-center self-start" key={index}>
             <div
-              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-8 text-center rounded`}
+              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-8 justify-center flex text-center rounded`}
             >
               {count}
             </div>
