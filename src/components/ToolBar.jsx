@@ -23,10 +23,9 @@ const ToolBar = ({ recordings, setRecordings }) => {
       .put("/api/video", { title: "", videoId: remove, action: "delete" })
       .then(() => {
         toast("✅ Sucessfully deleted");
+        setRecordings(keep);
       })
       .catch((err) => toast("❌ Internal Server Error"));
-
-    setRecordings(keep);
   };
 
   return (

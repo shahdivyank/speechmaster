@@ -46,6 +46,7 @@ const home = () => {
                 recordings={recordings}
                 setRecordings={setRecordings}
                 image={recording.image}
+                score={recording.score}
                 title={recording.title}
                 created={recording.created}
                 modified={recording.modified}

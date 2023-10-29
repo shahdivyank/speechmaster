@@ -4,6 +4,7 @@ import prisma from "../../../../prismaClient";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { POSTURES } from "@/data/Posture";
+import { EMOTIONS_NEG, EMOTIONS_POS } from "@/data/Emotions";
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -20,12 +21,21 @@ export async function POST(req) {
     resource_type: "video",
     raw_convert: "google_speech",
   });
+  const score = Math.abs(
+    100 -
+      2 * postures.length -
+      2 *
+        humes.filter((hume) => EMOTIONS_NEG.includes(hume.emotionName)).length +
+      2 *
+        humes.filter((hume) => EMOTIONS_POS.includes(hume.emotionName)).length,
+  );
+
   await prisma.videos.create({
     data: {
       identifier: video.public_id,
       userId: session.user.id,
       created: created,
-      score: 0,
+      score: score,
       title: title,
       categories: categories.join(","),
     },

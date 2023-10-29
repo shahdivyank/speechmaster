@@ -13,8 +13,8 @@ import BreakDown from "@/components/BreakDown";
 import { EMOTIONS_NEG, EMOTIONS_POS } from "@/data/Emotions";
 
 const review = ({ params }) => {
-  const value = 78;
   const [title, setTitle] = useState("");
+  const [vedio, setVedio] = useState({});
   const [breakdownView, setBreakdownView] = useState(false);
   const [postures, setPostures] = useState([]);
   const [humes, setHumes] = useState([]);
@@ -22,6 +22,7 @@ const review = ({ params }) => {
 
   useEffect(() => {
     axios.get(`/api/video?videoId=${params.id}`).then((res) => {
+      setVedio(res.data.video);
       setTitle(res.data.video.title);
       setPostures(res.data.postures);
       setHumes(res.data.humes);
@@ -101,9 +102,9 @@ const review = ({ params }) => {
               <CircularProgressbar
                 className="-mt-5"
                 counterClockwise={true}
-                value={value}
+                value={vedio.score}
                 maxValue={100}
-                text={value}
+                text={vedio.score}
               />
             </div>
             <p

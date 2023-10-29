@@ -12,7 +12,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
         <BsArrowLeftShort /> breakdown
       </p>
       <div className="self-start font-bold text-lg flex items-center justify-between cursor-pointer hover:text-sm-orange ease-in-out">
-        Gestures
+        Posture
       </div>
       {Object.entries(POSTURES).map(([type, key], index) => {
         const count = postures.filter((posture) => {
@@ -23,7 +23,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
             <>
               <div className="flex items-center gap-1 self-start">
                 <div
-                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-red w-6 text-center rounded`}
+                  className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-red w-8 text-center rounded`}
                 >
                   {count}
                 </div>
@@ -61,7 +61,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
         return (
           <div className="flex items-center self-start" key={index}>
             <div
-              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-6 text-center rounded`}
+              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-blue w-8 text-center rounded`}
             >
               {count}
             </div>
@@ -80,7 +80,7 @@ const BreakDown = ({ setBreakdownView, postures, humes }) => {
         return (
           <div className="flex items-center self-start" key={index}>
             <div
-              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-6 text-center rounded`}
+              className={`mr-2 text-sm-white font-bold my-1 aspect-square bg-sm-orange w-8 text-center rounded`}
             >
               {count}
             </div>
