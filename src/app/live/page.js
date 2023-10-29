@@ -13,9 +13,12 @@ import "@tensorflow/tfjs-backend-webgl";
 import Checkbox from "@/components/Checkbox";
 import { useRouter } from "next/navigation";
 import { useInterval } from "@/components/useInterval";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Live = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [startTime, setStartTime] = useState(null);
   const { data: session } = useSession();
   const [recording, setRecording] = useState(false);
   const webcamRef = useRef(null);
@@ -62,6 +65,7 @@ const Live = () => {
   }, []);
 
   const handleStartRecording = useCallback(() => {
+    setStartTime(new Date());
     setRecording(true);
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
       mimeType: "video/webm",
@@ -88,6 +92,7 @@ const Live = () => {
   }, [mediaRecorderRef, webcamRef, setRecording]);
 
   const handleUpload = useCallback(async () => {
+    setLoading(true);
     if (recordedVideo.length) {
       const blob = new Blob(recordedVideo, {
         type: "video/webm",
@@ -102,17 +107,28 @@ const Live = () => {
             file: base64data,
             title: title,
             categories: Object.keys(tags).filter((tag) => tags[tag]),
+            created: startTime,
           })
           .then((res) => {
             toast("✅ Video Uploaded Successfully");
+            console.log(res.data.identifier);
+            axios
+              .post(`/api/posture`, {
+                postures: notifs,
+                videoId: res.data.identifier,
+              })
+              .then((res) => {
+                toast("✅ Postures Uploaded Successfully");
+                setRecordedVideo([]);
+                router.push("/dashboard");
+                setLoading(false);
+              });
           })
           .catch((err) => {
             toast("❌ Internal Server Error");
           });
+        console.log("final notifs", notifs);
       };
-
-      setRecordedVideo([]);
-      router.push("/dashboard");
     }
   }, [recordedVideo]);
 
@@ -326,6 +342,12 @@ const Live = () => {
             </button>
           )}
         </div>
+        {loading && (
+          <div className="flex items-center gap-2">
+            Uploading...
+            <AiOutlineLoading3Quarters className="text-sm-red animate-spin" />
+          </div>
+        )}
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
         <p className="font-bold text-xl p-0">note</p>
