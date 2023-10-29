@@ -4,11 +4,12 @@ import Webcam from "react-webcam";
 import { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import "@tensorflow/tfjs-backend-webgl";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
 import Link from "next/link";
+import * as tf from "@tensorflow/tfjs-core";
+import "@tensorflow/tfjs-backend-webgl";
 
 const live = () => {
   const { data: session } = useSession();
@@ -29,6 +30,14 @@ const live = () => {
   }, [webcamRef]);
 
   useEffect(() => {
+    const loadup = async () => {
+      await tf.setBackend("webgl");
+      await tf.ready();
+    };
+
+    loadup();
+    load();
+
     socket.connect();
 
     socket.emit("join", session.user.id);
@@ -110,17 +119,18 @@ const live = () => {
 
   const detect = async (detector) => {
     if (detector && webcamRef) {
-      if (webcamRef.current) {
+      if (webcamRef.current.video) {
         const poses = await detector.estimatePoses(webcamRef.current.video);
-        checkHeadTilt(poses[0].keypoints);
-        checkShoulderTilt(poses[0].keypoints);
-        checkHipTilt(poses[0].keypoints);
-        checkLegTitle(poses[0].keypoints);
+        if (poses[0]) {
+          checkHeadTilt(poses[0].keypoints);
+          checkShoulderTilt(poses[0].keypoints);
+          checkHipTilt(poses[0].keypoints);
+          checkLegTitle(poses[0].keypoints);
+        }
       }
     }
+    requestAnimationFrame(detect);
   };
-
-  load();
 
   const checkHeadTilt = (poses) => {
     const leftEye = poses[1];
