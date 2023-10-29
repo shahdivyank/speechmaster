@@ -5,22 +5,58 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "react-circular-progressbar/dist/styles.css";
 import VideoPlayer from "@/components/VideoPlayer";
+import { TAGS } from "@/data/mockTags";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const review = ({ params }) => {
   const value = 78;
+  const [title, setTitle] = useState("");
+  const [video, setVideo] = useState({});
+  console.log(video);
+  useEffect(() => {
+    axios.get(`/api/video?videoId=${params.id}`).then((res) => {
+      setVideo(res.data);
+      console.log(res.data);
+      setTitle(res.data.title);
+    });
+  }, []);
   return (
-    <div className="w-full flex justify-center bg-sm-beige">
-      <div className="w-8/12 flex flex-col min-h-screen">
+    <div className="w-full flex justify-center bg-sm-beige h-[90vh]">
+      <div className="w-8/12 flex flex-col">
         <div className="h-6 w-full flex my-3">
           <textarea
             className="px-2 resize-none rounded w-full"
             placeholder="title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
           />
-          <div className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs">
+          <div
+            className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs hover:cursor-pointer"
+            onClick={() => {
+              axios
+                .put("/api/video", {
+                  title: title,
+                  videoId: params.id,
+                  action: "update",
+                })
+                .then((res) => {
+                  toast("✅ successfully updated");
+                });
+            }}
+          >
             save
           </div>
         </div>
-        <VideoPlayer videoId={params.id} timeLine={true} controls={false} />
+        <VideoPlayer
+          videoId={params.id}
+          timeLine={true}
+          controls={false}
+          tags={TAGS}
+        />
       </div>
 
       <div className="w-1/4 m-4 bg-sm-white p-3 rounded-xl">

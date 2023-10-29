@@ -219,9 +219,6 @@ const live = () => {
               setTitle(e.target.value);
             }}
           />
-          <div className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs">
-            save
-          </div>
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
         <div className="flex gap-3 items-center">

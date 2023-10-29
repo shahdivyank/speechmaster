@@ -3,10 +3,9 @@ import { BsPlayCircle, BsStopCircle } from "react-icons/bs";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
-import { TAGS } from "@/data/mockTags";
+import { BiSolidMap } from "react-icons/bi";
 
-const VideoPlayer = ({ videoId, controls, timeLine }) => {
-  const [tags, setTags] = useState(TAGS);
+const VideoPlayer = ({ videoId, controls, timeLine, tags }) => {
   const [toggle, setToggle] = useState(false);
   const cld = new Cloudinary({
     cloud: {
@@ -23,7 +22,7 @@ const VideoPlayer = ({ videoId, controls, timeLine }) => {
   return (
     <div className="w-full">
       <video
-        className="w-full"
+        className="w-full max-h-[70vh]"
         src={myVideo.toURL()}
         ref={videoRef}
         controls={controls}
@@ -66,7 +65,7 @@ const VideoPlayer = ({ videoId, controls, timeLine }) => {
               <div
                 style={{
                   position: "absolute",
-                  top: 0,
+                  bottom: 0,
                   left: `${pos}` + "%",
                 }}
                 key={index}
@@ -75,7 +74,10 @@ const VideoPlayer = ({ videoId, controls, timeLine }) => {
                   videoRef.current.currentTime = tag.time;
                 }}
               >
-                {tag.note}
+                <BiSolidMap
+                  className={tag.color + " hover:cursor-pointer"}
+                  size={30}
+                />
               </div>
             );
           })}

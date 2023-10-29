@@ -30,21 +30,33 @@ export async function POST(req) {
   return res.json(snapshot);
 }
 
-export async function GET() {
+export async function GET(req) {
   const res = NextResponse;
-  const session = await getServerSession(authOptions);
-  const response = await prisma.videos.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: [
-      {
-        created: "desc",
+  const videoId = req.nextUrl.searchParams.get("videoId");
+  console.log(videoId);
+  if (videoId) {
+    const response = await prisma.videos.findUnique({
+      where: {
+        identifier: videoId,
       },
-    ],
-  });
-  if (response) return res.json(response);
-  else return res.json(500);
+    });
+    if (response) return res.json(response);
+    else return res.json(500);
+  } else {
+    const session = await getServerSession(authOptions);
+    const response = await prisma.videos.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: [
+        {
+          created: "desc",
+        },
+      ],
+    });
+    if (response) return res.json(response);
+    else return res.json(500);
+  }
 }
 
 export async function PUT(req) {
@@ -63,7 +75,7 @@ export async function PUT(req) {
   } else {
     const snapShot = await prisma.videos.update({
       where: {
-        videoId: videoId,
+        identifier: videoId,
       },
       data: {
         title: title,
