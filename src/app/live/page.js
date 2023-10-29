@@ -313,7 +313,7 @@ const Live = () => {
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
 
-        <div className="flex gap-3 items-center justify-between w-11/12 p-3">
+        <div className="flex gap-3 items-center justify-around w-11/12 p-3">
           {recording ? (
             <BsStopCircle
               className="text-sm-red text-5xl cursor-pointer"
