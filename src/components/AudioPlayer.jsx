@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import AudioAnalysis from "./AudioAnalysis";
 
-const AudioPlayer = ({ globalIsPlaying }) => {
+const AudioPlayer = ({ globalIsPlaying, setDBEmotions }) => {
   const { startRecording, stopRecording, recordingBlob, recordingTime } =
     useAudioRecorder(
       {
@@ -48,7 +48,14 @@ const AudioPlayer = ({ globalIsPlaying }) => {
   };
 
   return (
-    <div>{base64Audio && <AudioAnalysis base64Encoded={base64Audio} />}</div>
+    <div>
+      {base64Audio && (
+        <AudioAnalysis
+          setDBEmotions={setDBEmotions}
+          base64Encoded={base64Audio}
+        />
+      )}
+    </div>
   );
 };
 

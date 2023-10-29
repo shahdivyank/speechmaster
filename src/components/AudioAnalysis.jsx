@@ -2,12 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const AudioAnalysis = ({ base64Encoded }) => {
+const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
   const apiKey = process.env.NEXT_PUBLIC_HUME_AI_KEY;
   const socketRef = useRef(WebSocket);
   const serverReadyRef = useRef(true);
 
   const [humePredictions, setHumePredictions] = useState(null);
+  const [topEmotions, setTopEmotions] = useState({
+    Amusement: 0,
+    Excitement: 0,
+    Interest: 0,
+    Determination: 0,
+    Joy: 0,
+    Anger: 0,
+    Confusion: 0,
+    Awkwardness: 0,
+    Boredom: 0,
+    Tiredness: 0,
+  });
+  const [currentEmotions, setCurrentEmotions] = useState([]);
 
   useEffect(() => {
     if (!base64Encoded) {
@@ -58,10 +71,63 @@ const AudioAnalysis = ({ base64Encoded }) => {
     const response = JSON.parse(event.data);
     if (response) {
       console.log("Got response", response.prosody);
-      response.prosody.predictions
-        ? setHumePredictions(response.prosody.predictions[0].emotions[0])
-        : null;
-      console.log("Predictions: " + humePredictions);
+      if (response.prosody && response.prosody.predictions) {
+        setHumePredictions(response.prosody.predictions[0].emotions);
+        if (humePredictions) {
+          setHumePredictions(
+            humePredictions.sort((a, b) => b.score - a.score).slice(0, 3),
+          );
+          console.log("Predictions: ");
+          console.log(humePredictions.slice(0, 3));
+
+          setTopEmotions((prev) => {
+            const newTopEmotions = { ...prev };
+            humePredictions.slice(0, 3).forEach((emotion) => {
+              console.log("current emotion " + emotion.name);
+              if (
+                newTopEmotions.hasOwnProperty(emotion.name) &&
+                emotion.score >= 0.1
+              ) {
+                newTopEmotions[emotion.name] += 1;
+                if (
+                  topEmotions[emotion.name] % 2 === 0 &&
+                  topEmotions[emotion.name] !== 0
+                ) {
+                  setDBEmotions((prevDBEmotions) => {
+                    const newEmotionEntry = {
+                      timestamp: new Date(),
+                      emotion: Emotions[emotion.name],
+                    };
+
+                    const updatedDBEmotions = [
+                      ...prevDBEmotions,
+                      newEmotionEntry,
+                    ];
+
+                    return updatedDBEmotions;
+                  });
+                  setCurrentEmotions((prev) => {
+                    if (!prev.includes(emotion.name)) {
+                      const newCurrentEmotions = [...prev, emotion.name];
+
+                      if (newCurrentEmotions.length > 3) {
+                        newCurrentEmotions.shift();
+                      }
+
+                      return newCurrentEmotions;
+                    }
+                    return prev;
+                  });
+                }
+              }
+            });
+            return newTopEmotions;
+          });
+
+          console.log(topEmotions);
+          setHumePredictions(null);
+        }
+      }
     }
     return;
   }
@@ -77,7 +143,31 @@ const AudioAnalysis = ({ base64Encoded }) => {
       console.warn("Could not close socket, not initialized yet");
     }
   };
-  return <div>{humePredictions && <div>{humePredictions.name}</div>}</div>;
+  return (
+    <div>
+      {currentEmotions && (
+        <div className="bg-sm-lightgrey p-1 rounded-lg font-semibold">
+          {currentEmotions.map((emotion, index) => {
+            const arrayIndex = Object.keys(topEmotions).indexOf(emotion);
+            if (arrayIndex < 5) {
+              return (
+                <div key={index} className="flex gap-1 items-center">
+                  <div className="rounded-full p-2 bg-sm-blue"></div>
+                  <div>{emotion}</div>
+                </div>
+              );
+            } else
+              return (
+                <div key={index} className="flex gap-1 items-center">
+                  <div className="rounded-full p-2  bg-sm-red"></div>
+                  <div>{emotion}</div>
+                </div>
+              );
+          })}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default AudioAnalysis;

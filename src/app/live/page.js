@@ -19,6 +19,7 @@ const live = () => {
   const mediaRecorderRef = useRef(null);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
+  const [DBEmotions, setDBEmotions] = useState([]);
 
   const handleShare = () => {
     const link = `http://localhost:3000/join/${session.user.id}`;
@@ -31,6 +32,7 @@ const live = () => {
   }, [webcamRef]);
 
   useEffect(() => {
+    console.log(DBEmotions);
     const loadup = async () => {
       await tf.setBackend("webgl");
       await tf.ready();
@@ -223,7 +225,6 @@ const live = () => {
           />
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
-        <AudioPlayer globalIsPlaying={recording} />
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -256,7 +257,11 @@ const live = () => {
         </div>
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
-        <p className="font-bold text-xl p-0">note</p>
+        <p className="font-bold text-xl p-0">emotional tone</p>
+        <AudioPlayer
+          globalIsPlaying={recording}
+          setDBEmotions={setDBEmotions}
+        />
       </div>
     </div>
   );
