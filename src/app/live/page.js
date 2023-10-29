@@ -4,11 +4,13 @@ import Webcam from "react-webcam";
 import { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import "@tensorflow/tfjs-backend-webgl";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
 import AudioPlayer from "@/components/AudioPlayer";
+import Link from "next/link";
+import * as tf from "@tensorflow/tfjs-core";
+import "@tensorflow/tfjs-backend-webgl";
 
 const live = () => {
   const { data: session } = useSession();
@@ -29,6 +31,14 @@ const live = () => {
   }, [webcamRef]);
 
   useEffect(() => {
+    const loadup = async () => {
+      await tf.setBackend("webgl");
+      await tf.ready();
+    };
+
+    loadup();
+    load();
+
     socket.connect();
 
     socket.emit("join", session.user.id);
@@ -110,17 +120,18 @@ const live = () => {
 
   const detect = async (detector) => {
     if (detector && webcamRef) {
-      if (webcamRef.current) {
+      if (webcamRef.current.video) {
         const poses = await detector.estimatePoses(webcamRef.current.video);
-        checkHeadTilt(poses[0].keypoints);
-        checkShoulderTilt(poses[0].keypoints);
-        checkHipTilt(poses[0].keypoints);
-        checkLegTitle(poses[0].keypoints);
+        if (poses[0]) {
+          checkHeadTilt(poses[0].keypoints);
+          checkShoulderTilt(poses[0].keypoints);
+          checkHipTilt(poses[0].keypoints);
+          checkLegTitle(poses[0].keypoints);
+        }
       }
     }
+    requestAnimationFrame(detect);
   };
-
-  load();
 
   const checkHeadTilt = (poses) => {
     const leftEye = poses[1];
@@ -210,9 +221,6 @@ const live = () => {
               setTitle(e.target.value);
             }}
           />
-          <div className="px-2.5 pt-0.5 text-sm-white bg-sm-red rounded text-xs">
-            save
-          </div>
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
         <AudioPlayer globalIsPlaying={recording} />
@@ -237,12 +245,13 @@ const live = () => {
           )}
           <button onClick={handleShare}>SHARE ME</button>
           {recordedVideo.length > 0 && (
-            <div
-              className="bg-sm-red text-lg font-semibold text-white px-3 py-2 rounded-sm hover:cursor-pointer"
+            <Link
+              className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
+              href="/dashboard"
             >
               Upload
-            </div>
+            </Link>
           )}
         </div>
       </div>
