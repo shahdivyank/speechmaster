@@ -66,7 +66,7 @@ const home = () => {
                 selected={recording.selected}
                 categories={recording.categories}
                 format={`${
-                  index % 2 === 0 ? "bg-sm-lightgrey/40" : "bg-sm-white/50"
+                  index % 2 === 0 ? "bg-sm-white/40" : "bg-sm-white/60"
                 } ${
                   index === 0
                     ? "rounded-t-lg"
