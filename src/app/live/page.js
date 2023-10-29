@@ -96,7 +96,6 @@ const live = () => {
           .post(`/api/video`, {
             file: base64data,
             title: title,
-            // TODO: add actrual categories
             categories: Object.keys(tags).filter((tag) => tags[tag]),
           })
           .then((res) => {

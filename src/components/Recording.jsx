@@ -61,7 +61,7 @@ const Recording = ({
                 last modified: {modified}
               </p>
               <Link
-                href="/review"
+                href={`/review/${id}`}
                 className="hover:opacity-50 transition-transform ease-in-out flex items-center text-xs text-sm-red font-semibold no-underline"
               >
                 more details <BsArrowRightShort className="text-xl" />
