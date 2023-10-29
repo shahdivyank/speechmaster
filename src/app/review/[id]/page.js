@@ -59,7 +59,26 @@ const review = ({ params }) => {
       </div>
 
       <div className="w-1/4 m-4 bg-sm-white p-3 rounded-xl">
-        <p className="font-bold text-xl">report</p>
+        <div className="flex w-full items-center justify-between">
+          <p className="font-bold text-xl">report</p>
+          <p
+            className="font-bold text-xl bg-sm-red rounded-md text-white hover:cursor-pointer px-2"
+            onClick={() => {
+              axios.post("/api/outline", { videoId: params.id }).then((res) => {
+                console.log(res.data.url);
+                const url = res.data.url;
+                const a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                a.href = url;
+                a.click();
+                window.URL.revokeObjectURL(url);
+              });
+            }}
+          >
+            transcript
+          </p>
+        </div>
         <CircularProgressbar
           className="-mt-5 scale-75"
           counterClockwise={true}
