@@ -243,7 +243,7 @@ const live = () => {
           </div>
         </div>
 
-        <Webcam mirrored={true} audio={true} ref={webcamRef} />
+        <Webcam mirrored={true} audio={false} ref={webcamRef} />
         <AudioPlayer
           globalIsPlaying={recording}
           setBase64Audio={setBase64Audio}
