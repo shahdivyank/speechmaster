@@ -13,14 +13,6 @@ import "@tensorflow/tfjs-backend-webgl";
 import Checkbox from "@/components/Checkbox";
 import { useRouter } from "next/navigation";
 import { useInterval } from "@/components/useInterval";
-import { FaCircle } from "react-icons/fa";
-
-const POSTURES_COLORS = {
-  face: "text-sm-red",
-  shoulder: "text-sm-red",
-  hip: "text-sm-red",
-  leg: "text-sm-red",
-};
 
 const Live = () => {
   const router = useRouter();
@@ -343,18 +335,93 @@ const Live = () => {
         </div>
         <p className="font-bold text-xl p-0 my-2">posture check</p>
         <div className="bg-sm-lightgrey min-h-20 pb-2 px-2 pt-1 rounded-lg font-semibold">
-          {notifs
-            .slice(notifs.length - 3, notifs.length)
-            .reverse()
-            .map((notif, index) => (
-              <div key={index} className="flex items-center">
-                <FaCircle className={`${POSTURES_COLORS[notif.type]} mr-2`} />
-                {notif.message}
-                <br />
+          <div className="flex items-center my-2">
+            <div
+              className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                notifs[notifs.length - 1].type === "face" ? "font-bold" : "font"
+              }`}
+            >
+              {notifs.filter((notif) => notif.type === "face").length}
+            </div>
+            <p
+              className={`m-0 ${
+                notifs[notifs.length - 1].type === "face"
+                  ? "font-bold"
+                  : "font-normal"
+              }`}
+            >
+              Avoiding Eye Contact
+            </p>
+
+            <br />
+          </div>
+          <div className="flex items-center my-2">
+            <div
+              className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                notifs[notifs.length - 1].type === "shoulder"
+                  ? "font-bold"
+                  : "font"
+              }`}
+            >
+              {notifs.filter((notif) => notif.type === "shoulder").length}
+            </div>
+            <p
+              className={`m-0 ${
+                notifs[notifs.length - 1].type === "shoulder"
+                  ? "font-bold"
+                  : "font-normal"
+              }`}
+            >
+              Not Standing Straight
+            </p>
+            <br />
+          </div>
+          {body === "whole" && (
+            <div className="flex items-center my-2">
+              <div
+                className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                  notifs[notifs.length - 1].type === "hip"
+                    ? "font-bold"
+                    : "font"
+                }`}
+              >
+                {notifs.filter((notif) => notif.type === "hip").length}
               </div>
-            ))}
-          {notifs.slice(notifs.length - 3, notifs.length).reverse().length ===
-            0 && <p>no current improvements</p>}
+              <p
+                className={`m-0 ${
+                  notifs[notifs.length - 1].type === "hip"
+                    ? "font-bold"
+                    : "font-normal"
+                }`}
+              >
+                Hips Not Level
+              </p>
+              <br />
+            </div>
+          )}
+          {body === "whole" && (
+            <div className="flex items-center my-2">
+              <div
+                className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                  notifs[notifs.length - 1].type === "leg"
+                    ? "font-bold"
+                    : "font"
+                }`}
+              >
+                {notifs.filter((notif) => notif.type === "leg").length}
+              </div>
+              <p
+                className={`m-0 ${
+                  notifs[notifs.length - 1].type === "leg"
+                    ? "font-bold"
+                    : "font-normal"
+                }`}
+              >
+                Moving Legs
+              </p>
+              <br />
+            </div>
+          )}
         </div>
       </div>
     </div>
