@@ -8,6 +8,7 @@ import "@tensorflow/tfjs-backend-webgl";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { socket } from "../../../socket";
+import AudioPlayer from "@/components/AudioPlayer";
 
 const live = () => {
   const { data: session } = useSession();
@@ -214,6 +215,8 @@ const live = () => {
           </div>
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
+        <AudioPlayer globalIsPlaying={recording} />
+
         <div className="flex gap-3 items-center">
           {recording ? (
             <BsStopCircle

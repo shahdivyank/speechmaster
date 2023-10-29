@@ -7,12 +7,10 @@ const AudioPlayer = ({ globalIsPlaying }) => {
   const {
     startRecording,
     stopRecording,
-    togglePauseResume,
+
     recordingBlob,
-    isRecording,
-    isPaused,
+
     recordingTime,
-    mediaRecorder,
   } = useAudioRecorder(
     {
       noiseSuppression: true,
@@ -43,16 +41,6 @@ const AudioPlayer = ({ globalIsPlaying }) => {
     }
   }, [globalIsPlaying, recordingTime, recordingBlob]);
 
-  // useEffect(() => {
-  //   console.log("hello")
-  //   startRecording();
-
-  //   addAudioElement(recordingBlob)
-
-  // }, [recordingBlob])
-  const handlePlayer = () => {
-    startRecording();
-  };
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob);
     setAudio([...audios, url]);
@@ -70,13 +58,7 @@ const AudioPlayer = ({ globalIsPlaying }) => {
     }
   };
 
-  return (
-    <div>
-      <div>{recordingTime}</div>
-      <button onClick={handlePlayer}>button</button>
-      {base64Audio && <AudioAnalysis audioBlob={base64Audio} />}
-    </div>
-  );
+  return <div>{base64Audio && <AudioAnalysis audioBlob={base64Audio} />}</div>;
 };
 
 export default AudioPlayer;

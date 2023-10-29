@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const AudioAnalysis = ({ audioBlob }) => {
   const apiKey = process.env.NEXT_PUBLIC_HUME_AI_KEY;
   const socketRef = useRef(WebSocket);
   const serverReadyRef = useRef(true);
+
+  const [humePredictions, setHumePredictions] = useState(null);
 
   useEffect(() => {
     connect();
@@ -36,8 +38,6 @@ const AudioAnalysis = ({ audioBlob }) => {
       console.log("No socket on state");
       return;
     }
-    console.log("hello");
-    console.log(audioBlob);
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
@@ -53,6 +53,13 @@ const AudioAnalysis = ({ audioBlob }) => {
   async function socketOnMessage(event) {
     const response = JSON.parse(event.data);
     console.log("Got response", response);
+    if (response) {
+      console.log(response.prosody);
+      response.prosody.predictions
+        ? setHumePredictions(response.prosody.predictions[0].emotions[0])
+        : null;
+    }
+    response ? setHumePredictions(response.prosody.predictions) : null;
     return;
   }
 
@@ -67,7 +74,7 @@ const AudioAnalysis = ({ audioBlob }) => {
       console.warn("Could not close socket, not initialized yet");
     }
   };
-  return <div>AudioAnalysis</div>;
+  return <div>{humePredictions && <div></div>}</div>;
 };
 
 export default AudioAnalysis;
