@@ -14,6 +14,11 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+
+      return baseUrl;
+    },
     async session({ session, user }) {
       session.user = user;
       return session;

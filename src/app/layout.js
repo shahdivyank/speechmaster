@@ -1,11 +1,15 @@
 /* eslint-disable new-cap */
 "use client";
+import TitleBar from "@/components/TitleBar";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Poppins } from "next/font/google";
 import { useEffect } from "react";
 import axios from "axios";
+import ProtectedPage from "@/components/ProtectedPage";
+import { Toaster } from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -15,6 +19,8 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({ children, session }) {
+  const pathname = usePathname();
+
   useEffect(() => {
     axios.post("/api/socket");
   }, []);
@@ -26,7 +32,14 @@ export default function RootLayout({ children, session }) {
         refetchInterval={5 * 60}
         className="h-full"
       >
-        <body className="bg-sm-beige">{children}</body>
+        <body className="bg-sm-beige h-screen">
+          <ProtectedPage>
+            <Toaster />
+            {pathname !== "/" && pathname !== "/login" && <TitleBar />}
+
+            {children}
+          </ProtectedPage>
+        </body>
       </SessionProvider>
     </html>
   );

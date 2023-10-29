@@ -10,7 +10,6 @@ const VideoRecording = () => {
   const mediaRecorderRef = useRef(null);
   const [recording, setRecording] = useState(false);
   const [recordedVideo, setRecordedVideo] = useState([]);
-  const [title, setTitle] = useState("");
 
   const handleStartRecording = useCallback(() => {
     setRecording(true);
@@ -77,7 +76,6 @@ const VideoRecording = () => {
 
   return (
     <>
-      <input value={title} onChange={(e) => setTitle(e.target.value)} />
       <Webcam mirrored={true} audio={true} ref={webcamRef} />
       {recording ? (
         <button onClick={handleStopRecording}>Stop Capture</button>

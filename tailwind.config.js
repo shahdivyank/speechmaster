@@ -4,6 +4,7 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/data/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -17,6 +18,7 @@ module.exports = {
           beige: "#F4E7DD",
           white: "#FFFFFF",
           black: "#000000",
+          lightbeige: "#F1EDEB",
         },
       },
       fontFamily: {
