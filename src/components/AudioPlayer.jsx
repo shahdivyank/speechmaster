@@ -53,14 +53,7 @@ const AudioPlayer = ({
   };
 
   return (
-    <div>
-      {base64Audio && (
-        <AudioAnalysis
-          setDBEmotions={setDBEmotions}
-          base64Encoded={base64Audio}
-        />
-      )}
-    </div>
+    <AudioAnalysis setDBEmotions={setDBEmotions} base64Encoded={base64Audio} />
   );
 };
 

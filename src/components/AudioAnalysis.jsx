@@ -141,26 +141,45 @@ const AudioAnalysis = ({ base64Encoded, setDBEmotions }) => {
   };
   return (
     <div>
-      {currentEmotions && (
+      {currentEmotions.length != 0 ? (
         <div>
           {currentEmotions.map((emotion, index) => {
             const arrayIndex = Object.keys(topEmotions).indexOf(emotion);
             if (arrayIndex < 5) {
-              return (
+              return index == currentEmotions.length - 1 ? (
+                <div key={index} className="flex font-bold gap-1 items-center">
+                  <div className="rounded-full p-2 bg-sm-blue"></div>
+                  <div>{emotion}</div>
+                </div>
+              ) : (
                 <div key={index} className="flex gap-1 items-center">
                   <div className="rounded-full p-2 bg-sm-blue"></div>
                   <div>{emotion}</div>
                 </div>
               );
-            } else
-              return (
-                <div key={index} className="flex gap-1 items-center">
-                  <div className="rounded-full p-2  bg-sm-red"></div>
-                  <div>{emotion}</div>
-                </div>
-              );
+            } else {
+              if (index == currentEmotions.length - 1) {
+                return (
+                  <div
+                    key={index}
+                    className="flex font-bold gap-1 items-center"
+                  >
+                    <div className="rounded-full p-2  bg-sm-red"></div>
+                    <div>{emotion}</div>
+                  </div>
+                );
+              } else
+                return (
+                  <div key={index} className="flex gap-1 items-center">
+                    <div className="rounded-full p-2  bg-sm-red"></div>
+                    <div>{emotion}</div>
+                  </div>
+                );
+            }
           })}
         </div>
+      ) : (
+        <p className="p-0 m-0">awaiting voice input</p>
       )}
     </div>
   );

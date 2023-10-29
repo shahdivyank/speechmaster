@@ -172,7 +172,7 @@ const Live = () => {
         {
           timestamp: new Date(),
           type: "face",
-          message: "Make sure to look towards the audience!",
+          message: "Look towards the audience!",
         },
       ]);
       console.log("LOOKING DOWN");
@@ -253,8 +253,8 @@ const Live = () => {
         ...notifs,
         {
           timestamp: new Date(),
-          type: "hip",
-          message: "Avoid moving your legs too much!",
+          type: "leg",
+          message: "Avoid extra leg movement!",
         },
       ]);
       console.log("KEEP LEG IN CHECK");
@@ -302,7 +302,7 @@ const Live = () => {
             ))}
           </div>
         </div>
-        <Webcam mirrored={true} audio={true} ref={webcamRef} />
+        <Webcam mirrored={true} audio={false} ref={webcamRef} />
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -341,7 +341,7 @@ const Live = () => {
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
         <p className="font-bold text-xl p-0">emotional tone</p>
-        <div className="bg-sm-lightgrey pb-2 px-2 h-20 pt-1 rounded-lg font-semibold">
+        <div className="bg-sm-lightgrey pb-2 px-2 h-20 pt-1 rounded-lg">
           <AudioPlayer
             globalIsPlaying={recording}
             setBase64Audio={setBase64Audio}
@@ -349,6 +349,98 @@ const Live = () => {
             socket={socket}
             setDBEmotions={setDBEmotions}
           />
+        </div>
+        <p className="font-bold text-xl p-0 my-2">posture check</p>
+        <div className="bg-sm-lightgrey min-h-20 pb-2 px-2 pt-1 rounded-lg font-semibold">
+          <div className="flex items-center my-2">
+            <div
+              className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                notifs.length > 1 && notifs[notifs.length - 1].type === "face"
+                  ? "font-bold"
+                  : "font"
+              }`}
+            >
+              {notifs.filter((notif) => notif.type === "face").length}
+            </div>
+            <p
+              className={`m-0 ${
+                notifs.length && notifs[notifs.length - 1].type === "face"
+                  ? "font-bold"
+                  : "font-normal"
+              }`}
+            >
+              Avoiding Eye Contact
+            </p>
+
+            <br />
+          </div>
+          <div className="flex items-center my-2">
+            <div
+              className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                notifs.length && notifs[notifs.length - 1].type === "shoulder"
+                  ? "font-bold"
+                  : "font"
+              }`}
+            >
+              {notifs.filter((notif) => notif.type === "shoulder").length}
+            </div>
+            <p
+              className={`m-0 ${
+                notifs.length && notifs[notifs.length - 1].type === "shoulder"
+                  ? "font-bold"
+                  : "font-normal"
+              }`}
+            >
+              Not Standing Straight
+            </p>
+            <br />
+          </div>
+          {body === "whole" && (
+            <div className="flex items-center my-2">
+              <div
+                className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                  notifs.length && notifs[notifs.length - 1].type === "hip"
+                    ? "font-bold"
+                    : "font"
+                }`}
+              >
+                {notifs.filter((notif) => notif.type === "hip").length}
+              </div>
+              <p
+                className={`m-0 ${
+                  notifs.length && notifs[notifs.length - 1].type === "hip"
+                    ? "font-bold"
+                    : "font-normal"
+                }`}
+              >
+                Hips Not Level
+              </p>
+              <br />
+            </div>
+          )}
+          {body === "whole" && (
+            <div className="flex items-center my-2">
+              <div
+                className={`p-1 bg-sm-red text-white  w-8 rounded text-center mr-2 ${
+                  notifs.length && notifs[notifs.length - 1].type === "leg"
+                    ? "font-bold"
+                    : "font"
+                }`}
+              >
+                {notifs.filter((notif) => notif.type === "leg").length}
+              </div>
+              <p
+                className={`m-0 ${
+                  notifs.length && notifs[notifs.length - 1].type === "leg"
+                    ? "font-bold"
+                    : "font-normal"
+                }`}
+              >
+                Moving Legs
+              </p>
+              <br />
+            </div>
+          )}
         </div>
       </div>
     </div>
