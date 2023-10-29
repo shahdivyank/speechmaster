@@ -13,6 +13,14 @@ import "@tensorflow/tfjs-backend-webgl";
 import Checkbox from "@/components/Checkbox";
 import { useRouter } from "next/navigation";
 import { useInterval } from "@/components/useInterval";
+import { FaCircle } from "react-icons/fa";
+
+const POSTURES_COLORS = {
+  face: "text-sm-red",
+  shoulder: "text-sm-red",
+  hip: "text-sm-red",
+  leg: "text-sm-red",
+};
 
 const Live = () => {
   const router = useRouter();
@@ -163,7 +171,7 @@ const Live = () => {
         {
           timestamp: new Date(),
           type: "face",
-          message: "Make sure to look towards the audience!",
+          message: "Look towards the audience!",
         },
       ]);
       console.log("LOOKING DOWN");
@@ -245,7 +253,7 @@ const Live = () => {
         {
           timestamp: new Date(),
           type: "hip",
-          message: "Avoid moving your legs too much!",
+          message: "Avoid extra leg movement!",
         },
       ]);
       console.log("KEEP LEG IN CHECK");
@@ -291,7 +299,7 @@ const Live = () => {
             ))}
           </div>
         </div>
-        <Webcam mirrored={true} audio={true} ref={webcamRef} />
+        <Webcam mirrored={true} audio={false} ref={webcamRef} />
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -332,6 +340,21 @@ const Live = () => {
             socket={socket}
             setDBEmotions={setDBEmotions}
           />
+        </div>
+        <p className="font-bold text-xl p-0 my-2">posture check</p>
+        <div className="bg-sm-lightgrey min-h-20 pb-2 px-2 pt-1 rounded-lg font-semibold">
+          {notifs
+            .slice(notifs.length - 3, notifs.length)
+            .reverse()
+            .map((notif, index) => (
+              <div key={index} className="flex items-center">
+                <FaCircle className={`${POSTURES_COLORS[notif.type]} mr-2`} />
+                {notif.message}
+                <br />
+              </div>
+            ))}
+          {notifs.slice(notifs.length - 3, notifs.length).reverse().length ===
+            0 && <p>no current improvements</p>}
         </div>
       </div>
     </div>
