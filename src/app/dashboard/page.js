@@ -5,13 +5,16 @@ import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
 import { colors } from "@/data/Categories";
 import axios from "axios";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const home = () => {
+  const [loading, setLoading] = useState(true);
   const [recordings, setRecordings] = useState([]);
   useEffect(() => {
     axios
       .get("/api/videos")
       .then((response) => {
+        setLoading(false);
         setRecordings(
           response.data.map((r) => ({
             ...r,
@@ -33,8 +36,17 @@ const home = () => {
       />
       <div className="p-3 w-3/4 bg-sm-beige">
         <ToolBar recordings={recordings} setRecordings={setRecordings} />
-        {recordings.length === 0 && (
-          <div className="w-full flex justify-center">No video to display</div>
+        {loading ? (
+          <div className="w-full flex items-center gap-2 justify-center">
+            Loading...
+            <AiOutlineLoading3Quarters className="text-sm-red animate-spin" />
+          </div>
+        ) : (
+          recordings.filter((r) => !r.hidden).length === 0 && (
+            <div className="w-full flex justify-center">
+              No videos to display
+            </div>
+          )
         )}
         <div className=" h-[90vh] overflow-scroll">
           {recordings
