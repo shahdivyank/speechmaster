@@ -11,6 +11,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import Link from "next/link";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
+import Checkbox from "@/components/Checkbox";
 
 const live = () => {
   const { data: session } = useSession();
@@ -19,6 +20,11 @@ const live = () => {
   const mediaRecorderRef = useRef(null);
   const [recordedVideo, setRecordedVideo] = useState([]);
   const [title, setTitle] = useState("");
+  const [tags, setTags] = useState({
+    Workshops: false,
+    "Class Presentations": false,
+    Other: false,
+  });
 
   const handleShare = () => {
     const link = `http://localhost:3000/join/${session.user.id}`;
@@ -87,11 +93,11 @@ const live = () => {
         const base64data = reader.result;
         console.log(base64data);
         axios
-          .post(`api/video`, {
+          .post(`/api/video`, {
             file: base64data,
             title: title,
             // TODO: add actrual categories
-            categories: ["test", "menthy"],
+            categories: Object.keys(tags).filter((tag) => tags[tag]),
           })
           .then((res) => {
             console.log(res);
@@ -212,16 +218,29 @@ const live = () => {
   return (
     <div className="w-full h-[90vh] flex justify-center">
       <div className="w-8/12 flex flex-col h-full justify-between items-center">
-        <div className="h-6 w-full flex my-3">
-          <textarea
-            className="px-2 resize-none rounded w-full"
+        <div className="w-full flex flex-col my-3">
+          <input
+            className="px-2 py-1 outline-none resize-none rounded w-full"
             placeholder="title"
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
             }}
           />
+
+          <div className="flex">
+            {["Workshops", "Class Presentations", "Other"].map((tag, index) => (
+              <div className="flex items-center mx-2" key={index}>
+                <Checkbox
+                  state={tags[tag]}
+                  onClick={() => setTags({ ...tags, [tag]: !tags[tag] })}
+                />
+                <div>{tag}</div>
+              </div>
+            ))}
+          </div>
         </div>
+
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
         <AudioPlayer globalIsPlaying={recording} />
 
