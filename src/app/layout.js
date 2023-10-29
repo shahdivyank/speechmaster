@@ -18,6 +18,7 @@ const poppins = Poppins({
 
 export default function RootLayout({ children, session }) {
   const pathname = usePathname();
+
   return (
     <html lang="en" className={`${poppins.variable}`}>
       <SessionProvider
