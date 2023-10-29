@@ -313,7 +313,7 @@ const Live = () => {
         </div>
         <Webcam mirrored={true} audio={true} ref={webcamRef} />
 
-        <div className="flex gap-3 items-center justify-between w-11/12 p-3">
+        <div className="flex gap-3 items-center justify-around w-11/12 p-3">
           {recording ? (
             <BsStopCircle
               className="text-sm-red text-5xl cursor-pointer"
@@ -331,13 +331,15 @@ const Live = () => {
               }}
             />
           )}
-          {recordedVideo.length > 0 && (
+          {recordedVideo.length > 0 ? (
             <button
               className=" no-underline rounded bg-sm-red text-lg font-semibold text-white px-3 py-2 hover:cursor-pointer"
               onClick={handleUpload}
             >
               Upload
             </button>
+          ) : (
+            <div></div>
           )}
           {loading && (
             <div className="flex items-center gap-2">
