@@ -5,24 +5,19 @@ import AudioAnalysis from "./AudioAnalysis";
 
 const AudioPlayer = ({
   globalIsPlaying,
+  setDBEmotions,
   base64Audio,
   setBase64Audio,
   socket,
 }) => {
-  const {
-    startRecording,
-    stopRecording,
-
-    recordingBlob,
-
-    recordingTime,
-  } = useAudioRecorder(
-    {
-      noiseSuppression: false,
-      echoCancellation: false,
-    },
-    (err) => console.table(err), // onNotAllowedOrFound
-  );
+  const { startRecording, stopRecording, recordingBlob, recordingTime } =
+    useAudioRecorder(
+      {
+        noiseSuppression: false,
+        echoCancellation: false,
+      },
+      (err) => console.table(err), // onNotAllowedOrFound
+    );
   const [localIsRecording, setLocalIsRecording] = useState(false);
   const [currentBlob, setCurrentBlob] = useState(null);
 
@@ -58,7 +53,14 @@ const AudioPlayer = ({
   };
 
   return (
-    <div>{base64Audio && <AudioAnalysis base64Encoded={base64Audio} />}</div>
+    <div>
+      {base64Audio && (
+        <AudioAnalysis
+          setDBEmotions={setDBEmotions}
+          base64Encoded={base64Audio}
+        />
+      )}
+    </div>
   );
 };
 

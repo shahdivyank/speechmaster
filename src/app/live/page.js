@@ -30,6 +30,7 @@ const Live = () => {
     Other: false,
   });
   const [body, setBody] = useState("upper");
+  const [DBEmotions, setDBEmotions] = useState([]);
 
   const handleShare = () => {
     const link = `http://localhost:3000/join/${session.user.id}`;
@@ -42,6 +43,7 @@ const Live = () => {
   }, [webcamRef]);
 
   useEffect(() => {
+    console.log(DBEmotions);
     const loadup = async () => {
       await tf.setBackend("webgl");
       await tf.ready();
@@ -289,14 +291,7 @@ const Live = () => {
             ))}
           </div>
         </div>
-
-        <Webcam mirrored={true} audio={false} ref={webcamRef} />
-        <AudioPlayer
-          globalIsPlaying={recording}
-          setBase64Audio={setBase64Audio}
-          base64Audio={base64Audio}
-          socket={socket}
-        />
+        <Webcam mirrored={true} audio={true} ref={webcamRef} />
 
         <div className="flex gap-3 items-center">
           {recording ? (
@@ -328,7 +323,16 @@ const Live = () => {
         </div>
       </div>
       <div className="w-1/5 m-4 bg-sm-white p-3 rounded-xl">
-        <p className="font-bold text-xl p-0">note</p>
+        <p className="font-bold text-xl p-0">emotional tone</p>
+        <div className="bg-sm-lightgrey pb-2 px-2 h-20 pt-1 rounded-lg font-semibold">
+          <AudioPlayer
+            globalIsPlaying={recording}
+            setBase64Audio={setBase64Audio}
+            base64Audio={base64Audio}
+            socket={socket}
+            setDBEmotions={setDBEmotions}
+          />
+        </div>
       </div>
     </div>
   );
