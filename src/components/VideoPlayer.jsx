@@ -48,7 +48,7 @@ const VideoPlayer = ({
       {timeLine &&
         (toggle ? (
           <BsStopCircle
-            className="text-sm-red text-5xl cursor-pointer"
+            className="text-sm-red text-5xl cursor-pointer mb-5"
             onClick={() => {
               videoRef.current.pause();
               setToggle(false);
@@ -56,7 +56,7 @@ const VideoPlayer = ({
           />
         ) : (
           <BsPlayCircle
-            className="cursor-pointer text-5xl"
+            className="cursor-pointer text-5xl mb-5"
             onClick={() => {
               videoRef.current.play();
               setToggle(true);
